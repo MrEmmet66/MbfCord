@@ -1,0 +1,24 @@
+﻿<Window x:Class="Client.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+        mc:Ignorable="d"
+        Title="LoginWindow" Height="450" Width="296">
+
+    <Window.DataContext>
+        <viewmodel:LoginViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <StackPanel VerticalAlignment="Top">
+            <TextBox x:Name="txtUsername" Margin="10" Width="200" Height="30" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtPassword" Margin="10" Width="200" Height="30" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button x:Name="btnLogin" Margin="10" Width="200" Height="30" Content="Login" Command="{Binding TryLoginCommand}" Click="btnLogin_Click"/>
+            <Button x:Name="btnRegister" Margin="10" Width="200" Height="30" Content="Register" Command="{Binding OpenRegisterWindowCommand}"/>
+            <TextBlock x:Name="txtError" Margin="10" Width="200" Height="30" Text="{Binding Error}" TextAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
