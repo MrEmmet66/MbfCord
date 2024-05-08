@@ -1,4 +1,5 @@
 ﻿using Infrastructure.C2S;
+using Infrastructure.C2S.Auth;
 using Server.Handler.Base;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,7 @@ namespace Server.Handler.Util
 		{
 			if(handlers.TryGetValue(packet.GetType(), out var handler))
 			{
-				if (handler is null)
-					Activator.CreateInstance(handler);
-				return (IPacketHandler<T>)handler;
+				return (IPacketHandler<T>)Activator.CreateInstance(handler);
 			}
 			return null;
 		}

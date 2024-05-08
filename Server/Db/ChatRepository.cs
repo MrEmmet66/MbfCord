@@ -34,8 +34,8 @@ namespace Server.Db
 
         public Chat.Channel GetById(int id)
         {
-            throw new NotImplementedException();
-        }
+			return context.Channels.Find(id);
+		}
 
         public async Task<Chat.Channel> GetByIdAsync(int id)
         {
@@ -49,7 +49,7 @@ namespace Server.Db
 
         public async Task<Chat.Channel> GetByIdWithIncludesAsync(int id)
         {
-            return await context.Channels.Include(x => x.Members).Include(c => c.Messages).FirstOrDefaultAsync(x => x.Id == id);
+            return await context.Channels.Include(x => x.Members).Include(c => c.Messages).Include(r => r.Roles).FirstOrDefaultAsync(x => x.Id == id);
         }
 
         public bool Remove(int id)

@@ -13,9 +13,9 @@ namespace Server.Db
     internal class MessageRepository : IRepository<Message>
     {
         private readonly ApplicationContext context;
-        public MessageRepository()
+        public MessageRepository(ApplicationContext context)
         {
-            context = Program.ServiceProvider.GetRequiredService<ApplicationContext>();
+            this.context = context;
         }
         public Message Add(in Message sender)
         {

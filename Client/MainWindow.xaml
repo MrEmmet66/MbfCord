@@ -12,25 +12,117 @@
         <viewmodel:MainViewModel/>
     </Window.DataContext>
 
-    <Grid>
+    <Grid ShowGridLines="True">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MaxWidth="150"/>
-            <ColumnDefinition Width="*" MaxWidth="200"/>
-            <ColumnDefinition Width="*" MaxWidth="200"/>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Grid.Column="0">
             <TextBox x:Name="chatNameTextBox" Text="{Binding ChatName}"></TextBox>
             <TextBox x:Name="chatDescTextBox" Text="{Binding ChatDesc}"></TextBox>
             <Button x:Name="createChatButton" Command="{Binding CreateChatCommand}" Height="31"></Button>
         </StackPanel>
-        <TextBox x:Name="messageTextBox" Margin="10,332,73,-367" Text="{Binding Message}" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="2"></TextBox>
-        <Button x:Name="sendButton" Content="Send" Command="{Binding SendMessageCommand}" Margin="200,332,-150,-357" Grid.Column="2" Grid.Row="2"/>
-        <ListBox x:Name="chatMembersListbox" Grid.Column="2" Margin="350,0,-250,-226" Grid.RowSpan="3" ItemsSource="{Binding ChatMembers}">
+        <StackPanel Grid.Column="1" Grid.ColumnSpan="1" Grid.Row="4">
+            <TextBlock Text="{Binding SelectedMember.Username}"/>
+            <TextBlock Text="{Binding SelectedMember.Role.Name}"/>
+            <Grid Visibility="{Binding ClientMember.Role.CanPerformAction}" x:Name="memberActionsGrid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="0" Grid.Column="0" Content="Kick" Grid.ColumnSpan="2" Command="{Binding KickMemberCommand}" CommandParameter="{Binding SelectedMember.Id}" Visibility="{Binding ClientMember.Role.CanKick}"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="Set role" Command="{Binding AssignRoleCommand}" CommandParameter="{Binding SelectedMember.Id}" Visibility="{Binding ClientMember.Role.CanSetRole}"/>
+                <Button Grid.Row="1" Grid.Column="0" Content="Mute" Command="{Binding MuteMemberCommand}" CommandParameter="{Binding SelectedMember.Id}" Visibility="{Binding ClientMember.Role.CanMute}"/>
+                <Button Grid.Row="3" Grid.Column="1" Content="Unmute" Command="{Binding UnmuteMemberCommand}" CommandParameter="{Binding SelectedMember.Id}" Visibility="{Binding ClientMember.Role.CanMute}"/>
+                <Button Grid.Row="3" Grid.Column="0" Content="Ban" Command="{Binding BanMemberCommand}" CommandParameter="{Binding SelectedMember.Id}" Visibility="{Binding ClientMember.Role.CanBan}"/>
+                <DatePicker x:Name="restrictionDate" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" SelectedDate="{Binding RestrictionDate}"></DatePicker>
+            </Grid>
+        </StackPanel>
+        <Grid x:Name="roleAddGrid" Grid.Column="5" Grid.Row="5" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Role name" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <TextBox  x:Name="createdRoleNameTextBox" Grid.Column="1" Grid.Row="0" Text="{Binding CreatedRole.Name}"></TextBox>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Mute permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding CreatedRole.CanMute}"></CheckBox>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Kick permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding CreatedRole.CanKick}"></CheckBox>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Ban permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding CreatedRole.CanBan}"></CheckBox>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Set role permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding CreatedRole.CanSetRole}"></CheckBox>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Message permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding CreatedRole.CanSendMessage}"></CheckBox>
+            <Button Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Content="Add role" Command="{Binding AddRoleCommand}"></Button>
+        </Grid>
+
+        <Grid x:Name="roleEditGrid" Grid.Column="4" Grid.Row="4" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <ComboBox x:Name="rolesComboBox" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" ItemsSource="{Binding ChatRoles}" SelectedItem="{Binding SelectedRole}" DisplayMemberPath="Name"></ComboBox>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Role name" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <TextBox  x:Name="roleNameTextBox" Grid.Column="1" Grid.Row="1" Text="{Binding SelectedRole.Name}"></TextBox>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Mute permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="2" Grid.Column="1" IsChecked="{Binding SelectedRole.CanMute}"></CheckBox>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Kick permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="3" Grid.Column="1" IsChecked="{Binding SelectedRole.CanKick}"></CheckBox>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Ban permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding SelectedRole.CanBan}"></CheckBox>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="Set role permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding SelectedRole.CanSetRole}"></CheckBox>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Message permission" HorizontalAlignment="Right" Margin="0 0 10 0"></TextBlock>
+            <CheckBox Grid.Row="6" Grid.Column="1" IsChecked="{Binding SelectedRole.CanSendMessage}"></CheckBox>
+            <Button Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Content="Edit role" Command="{Binding EditRoleCommand}"></Button>
+            <Button Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="Remove role" Command="{Binding RemoveRoleCommand}"/>
+        </Grid>
+        <TextBox x:Name="messageTextBox" Text="{Binding Message}" Grid.ColumnSpan="3" Grid.Column="1" Grid.Row="3" VerticalAlignment="Bottom"></TextBox>
+        <Button x:Name="sendButton" Content="Send" Command="{Binding SendMessageCommand}" Grid.Column="4" Grid.Row="3" VerticalAlignment="Bottom" Grid.ColumnSpan="1"/>
+        <ListBox x:Name="chatMembersListbox" Grid.Column="6"  Grid.Row="0" ItemsSource="{Binding ChatMembers}" SelectedItem="{Binding SelectedMember}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -39,11 +131,12 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <TextBlock Text="{Binding Username}" Grid.Row="0"></TextBlock>
+                        <TextBlock Text="{Binding Role.Name}" Grid.Row="1"></TextBlock>
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListBox x:Name ="messagesListbox" Grid.Column="1" Margin="5,0,-145,-310" MaxHeight="300" Grid.RowSpan="3" Grid.ColumnSpan="2" ItemsSource="{Binding ChatMessages}">
+        <ListBox x:Name ="messagesListbox" Grid.Column="1" Grid.Row="0"  Grid.RowSpan="3"  Grid.ColumnSpan="4" ItemsSource="{Binding ChatMessages}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>
@@ -62,7 +155,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListBox Margin="350,231,-240,-357" ItemsSource="{Binding Chats}" Grid.Column="2"  MaxHeight="150" Grid.Row="2">
+        <ListBox ItemsSource="{Binding Chats}" Grid.Column="5" Grid.RowSpan="2" Grid.Row="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid VerticalAlignment="Stretch">
@@ -78,7 +171,7 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <ListBox x:Name="userChatsListbox" ItemsSource="{Binding UserChats}" Margin="0,39,0,-357" Grid.Row="2"  SelectedItem="{Binding SelectedChat}">
+        <ListBox x:Name="userChatsListbox" ItemsSource="{Binding UserChats}" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2"  SelectedItem="{Binding SelectedChat}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>

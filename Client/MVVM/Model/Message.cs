@@ -9,12 +9,14 @@ namespace Client.MVVM.Model
 {
     internal class Message
     {
-        public Message(string content, DateTime date, string sender)
+        public Message(int id, int chatId, string content, DateTime date, string sender)
         {
             Content = content;
             Date = date;
             Sender = sender;
-        }
+			Id = id;
+			ChatId = chatId;
+		}
         public Message(ChatMessageClientModel model)
         {
             Id = model.Id;

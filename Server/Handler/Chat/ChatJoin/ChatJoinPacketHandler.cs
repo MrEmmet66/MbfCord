@@ -6,19 +6,29 @@ using Server.Handler.Base;
 using Server.Net;
 using Infrastructure.S2C.Chat;
 using Infrastructure;
+using Infrastructure.S2C.Model;
+using Server.Services;
 
 namespace Server.Handler.Chat.ChatJoin
 {
 	internal class ChatJoinPacketHandler : IPacketHandler<BaseChatRequestClientPacket>
 	{
 		private readonly ChatRepository chatRepository;
-		private readonly UserRepository userRepository;
+		private readonly IUserRepository userRepository;
+		private readonly MessageService messageService;
+		private readonly MemberRestrictionService memberRestrictionService;
+		private readonly ChatService chatService;
 		public ClientObject Sender { get; set; }
 		public ChatJoinPacketHandler(ClientObject sender)
 		{
 			Sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
-			userRepository = Program.ServiceProvider.GetRequiredService<UserRepository>();
+			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
+			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
+			memberRestrictionService = Program.ServiceProvider.GetRequiredService<MemberRestrictionService>();
+			chatService = Program.ServiceProvider.GetRequiredService<ChatService>();
+
+
 		}
 
 		public void HandlePacket(BaseChatRequestClientPacket packet)
@@ -28,7 +38,7 @@ namespace Server.Handler.Chat.ChatJoin
 
 		public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
 		{
-			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
+			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			if (chat == null)
 				return;
 			if (chat.Members.Contains(Sender.User))
@@ -38,8 +48,16 @@ namespace Server.Handler.Chat.ChatJoin
 				Sender.SendPacket(PacketType.ChatJoinResult, jsonResponse);
 				return;
 			}
+			User user = await userRepository.GetByIdWithIncludesAsync(Sender.User.Id);
+			if (memberRestrictionService.IsUserBanned(user))
+			{
+				ChatJoinResponseServerPacket response = new ChatJoinResponseServerPacket(chat.Id, false, "You are banned from this chat");
+				Sender.SendPacket(response);
+				return;
+			}
+			Role memberRole = GetMemberRole(chat);
 			chat.Members.Add(Sender.User);
-			var user = userRepository.GetById(Sender.User.Id);
+			user.Roles.Add(memberRole);
 			if (user.Channels == null)
 				user.Channels = new List<Channel>();
 			user.Channels.Add(chat);
@@ -47,9 +65,19 @@ namespace Server.Handler.Chat.ChatJoin
 			userRepository.Update(user);
 			await userRepository.SaveAsync();
 			await chatRepository.SaveAsync();
+			ChatMemberClientModel member = new ChatMemberClientModel(chat.Id, user.Username, true, new ChatRoleClientModel(memberRole.Id, memberRole.Name, true, false, false, false, false));
+			chatService.SendPacketToClientsInChat(chat, Sender.User.Id, Sender.User.Id, new NewChatMemberServerPacket(chat.Id, member));
 			ChatJoinResponseServerPacket responsePacket = new ChatJoinResponseServerPacket(chat.Id, true);
-			Sender.SendPacket(PacketType.ChatJoinResult, responsePacket.Serialize());
+			Sender.SendPacket(responsePacket);
+			User system = userRepository.GetById(1);
+			messageService.AddChatMessage(new Server.Chat.Message(system, DateTime.Now, chat, $"{user.Username} joined this chat"));
 			Console.WriteLine("chat join handled");
 		}
+		private Role GetMemberRole(Channel chat)
+		{
+			return chat.Roles.FirstOrDefault(r => r.Name == "Member");
+		}
+
+
 	}
 }

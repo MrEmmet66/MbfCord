@@ -23,7 +23,6 @@ namespace Infrastructure.S2C.Auth
 			Message = message;
 
 		}
-
 		public bool Status { get; set; }
 		public string? Message { get; set; }
 	}

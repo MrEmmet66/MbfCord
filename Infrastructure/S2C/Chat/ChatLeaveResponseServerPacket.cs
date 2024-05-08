@@ -11,16 +11,12 @@ namespace Infrastructure.S2C.Chat
 		public bool Status { get; set; }
 		public string? Message { get; set; }
 		public int ChatId { get; set; }
+		public ChatLeaveResponseServerPacket() : base(PacketType.ChatLeaveResult)
+		{
+		}
 		public ChatLeaveResponseServerPacket(int chatId, bool status) : base(PacketType.ChatLeaveResult)
 		{
 			Status = status;
-			ChatId = chatId;
-		}
-
-		public ChatLeaveResponseServerPacket(int chatId, bool status, string message) : base(PacketType.ChatLeaveResult)
-		{
-			Status = status;
-			Message = message;
 			ChatId = chatId;
 		}
 

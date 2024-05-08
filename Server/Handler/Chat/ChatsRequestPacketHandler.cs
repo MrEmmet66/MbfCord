@@ -29,10 +29,11 @@ namespace Server.Handler.Chat
 
         public async Task HandlePacketAsync(BaseClientPacket packet)
         {
-            IQueryable<Channel> chats = chatRepository.GetAllAsync().Result;
+            IQueryable<Channel> chats = await chatRepository.GetAllAsync();
             ChatsResultServerPacket chatsResultServerPacket = new ChatsResultServerPacket(JsonConvert.SerializeObject(chats));
             string json = chatsResultServerPacket.Serialize();
             Sender.SendPacket(PacketType.ChatsResult, json);
+            Console.WriteLine("Chats request handled");
         }
 
         public void HandlePacket(BaseClientPacket packet)

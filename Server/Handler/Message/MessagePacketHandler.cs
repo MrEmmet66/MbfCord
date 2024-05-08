@@ -6,21 +6,27 @@ using Server.Chat;
 using Server.Db;
 using Server.Handler.Base;
 using Server.Net;
+using Server.Services;
 using System;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace Server.Handler.Message
 {
-    internal class MessagePacketHandler : IPacketHandler<MessageClientPacket>
-    {
+	internal class MessagePacketHandler : IPacketHandler<MessageClientPacket>
+	{
 		private readonly MessageRepository messageRepository;
 		private readonly ChatRepository chatRepository;
+		private readonly MessageService messageService;
+		private readonly MemberRestrictionService memberService;
 		public ClientObject Sender { get; set; }
 		public MessagePacketHandler(ClientObject sender)
 		{
 			Sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			messageRepository = Program.ServiceProvider.GetRequiredService<MessageRepository>();
+			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
+			memberService = Program.ServiceProvider.GetRequiredService<MemberRestrictionService>();
 		}
 
 		public void HandlePacket(MessageClientPacket packet)
@@ -30,23 +36,17 @@ namespace Server.Handler.Message
 
 		public async Task HandlePacketAsync(MessageClientPacket packet)
 		{
-			ServerObject server = ServerObject.Instance;
+			if(await memberService.IsUserMutedAsync(Sender.User))
+			{
+				MessageServerPacket responsePacket = new MessageServerPacket(0, "", DateTime.Now, "", 0, false);
+				responsePacket.Message = "You are muted";
+				Sender.SendPacket(responsePacket);
+				return;
+			}
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
 			Server.Chat.Message message = new Server.Chat.Message(Sender.User, DateTime.Now, chat, packet.MessageContent);
-			Server.Chat.Message dbMsg = messageRepository.Add(message);
-			await messageRepository.SaveAsync();
-			MessageServerPacket messagePacket = new MessageServerPacket(message.Id, message.Content, message.TimeStamp, message.Sender.Username, message.Channel.Id);
-			string json = messagePacket.Serialize();
-			foreach (ClientObject client in GetClientsInChat(chat.Id))
-			{
-				client.SendPacket(PacketType.Message, json);
-			}
+			messageService.AddChatMessage(message);
 			Console.WriteLine("Message handled");
-		}
-
-		private List<ClientObject> GetClientsInChat(int chatId)
-		{
-			return ServerObject.Instance.Clients.FindAll(x => x.User.Channels.Exists(x => x.Id == chatId));
 		}
 	}
 }

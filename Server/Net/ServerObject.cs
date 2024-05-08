@@ -59,5 +59,10 @@ namespace Server.Net
                 client.SendPacket(type, jsonPacket);
             }
         }
-    }
+
+		internal ClientObject GetClientObjectByUserId(int id)
+		{
+			return Clients.FirstOrDefault(c => c.User.Id == id);
+		}
+	}
 }

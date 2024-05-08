@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Server.Db;
 using Server.Events;
 using System;
 using System.Collections.Generic;
@@ -8,16 +9,8 @@ using System.Threading.Tasks;
 
 namespace Server.Chat
 {
-    public class Channel
+    public class Channel : IEntity
     {
-        public event EventHandler<EventArgs> MessageReceived;
-        public event EventHandler<EventArgs> UserJoined;
-        public event EventHandler<EventArgs> UserLeft;
-        public event EventHandler<UserPermissionChangeEventArgs> UserPermissionChanged;
-        public event EventHandler<EventArgs> ChannelDeleted;
-        public event EventHandler<EventArgs> ChannelRenamed;
-        public event EventHandler<ChannelDescriptionChangeEventArgs> ChannelDescriptionChanged;
-        public event EventHandler<EventArgs> ChannelCreated;
 
         public Channel(string name, string description)
         {
@@ -30,20 +23,11 @@ namespace Server.Chat
         public List<Message>? Messages { get; set; }
         [JsonIgnore]
         public List<User> Members { get; set; }
+        [JsonIgnore]
+        public List<Role> Roles { get; set; }
+        
         public string Name { get; set; }
         public string? Description { get; set; }
-
-
-
-        protected virtual void OnMessageReceived()
-        {
-            MessageReceived?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnUserJoined()
-        {
-            UserJoined?.Invoke(this, EventArgs.Empty);
-        }
 
     }
 }

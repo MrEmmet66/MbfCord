@@ -19,5 +19,14 @@ namespace Client.Net
 		public event EventHandler<ChatMessagesEventArgs> ChatMessagesResult;
 		public event EventHandler<ChatMembersEventArgs> ChatMembersResult;
 		public event EventHandler<ChatJoinResultEventArgs> ChatLeaveResult;
+		public event EventHandler<ChatRolesResultEventArgs> ChatRolesResult;
+		public event EventHandler<ClientInfoResultEventArgs> UsernameResult;
+		public event EventHandler<ChatActionEventArgs> ChatMemberKickResult;
+		public event EventHandler<NewMemberEventArgs> NewChatMember;
+		public event EventHandler<ChatMemberRemoveEventArgs> ChatMemberRemoved;
+		public event EventHandler<ChatActionEventArgs> ChatMemberActionResponse;
+		public event EventHandler<ServerResponseEventArgs> RoleAddResponse;
+		public event EventHandler<ServerResponseEventArgs> RoleEditResponse;
+		public event EventHandler<ServerResponseEventArgs> RoleRemoveResponse;
 	}
 }

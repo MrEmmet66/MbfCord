@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Server.Db;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server.Chat
 {
-    public class User
+    public class User : IEntity
     {
         public User(string userName, string hashedPassword)
         {
@@ -23,7 +24,11 @@ namespace Server.Chat
         public List<Message>? Messages { get; set; }
         [JsonIgnore]
         public List<Channel>? Channels { get; set; }
+        [JsonIgnore]
+        public List<Role>? Roles { get; set; }
+        [JsonIgnore]
+        public List<MemberRestriction>? MemberRestrictions { get; set; }
 
 
-    }
+	}
 }

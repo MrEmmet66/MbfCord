@@ -19,13 +19,15 @@ namespace Server.Handler.Chat.ChatMessageRequest
     internal class ChatMessageRequestHandler : IPacketHandler<BaseChatRequestClientPacket>
     {
         private readonly ChatRepository chatRepository;
+        private readonly MessageRepository messageRepository;
 		public ClientObject Sender { get; set; }
 
 		public ChatMessageRequestHandler(ClientObject sender)
         {
             Sender = sender;
             chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
-        }
+			messageRepository = Program.ServiceProvider.GetRequiredService<MessageRepository>();
+		}
 
 		public void HandlePacket(BaseChatRequestClientPacket packet)
         {
@@ -35,11 +37,13 @@ namespace Server.Handler.Chat.ChatMessageRequest
         public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
         {
             Console.WriteLine(packet.ChatId);
-            Channel chat = chatRepository.GetByIdWithIncludes(packet.ChatId);
-            List<Infrastructure.S2C.Model.ChatMessageClientModel> chatMessages = new List<Infrastructure.S2C.Model.ChatMessageClientModel>();
-            foreach (var message in chat.Messages)
+            Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
+            List<ChatMessageClientModel> chatMessages = new List<ChatMessageClientModel>();
+            foreach (var msg in chat.Messages)
             {
-                chatMessages.Add(new Infrastructure.S2C.Model.ChatMessageClientModel(
+                Server.Chat.Message message = await messageRepository.GetByIdWithIncludesAsync(msg.Id);
+
+                chatMessages.Add(new ChatMessageClientModel(
                     message.Id,
                     message.Content,
                     message.TimeStamp,

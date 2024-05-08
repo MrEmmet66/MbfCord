@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure
+namespace Server.Db
 {
-	public interface IClientObject
+	public interface IEntity
 	{
+		public int Id { get; set; }
 	}
 }

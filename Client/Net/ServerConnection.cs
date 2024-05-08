@@ -6,7 +6,10 @@ using Infrastructure.C2S.Auth;
 using Infrastructure.C2S.Chat;
 using Infrastructure.S2C.Auth;
 using Infrastructure.S2C.Chat;
+using Infrastructure.S2C.MemberAction;
+using Infrastructure.S2C.Message;
 using Infrastructure.S2C.Model;
+using Infrastructure.S2C.Roles;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -107,11 +110,6 @@ namespace Client.Net
             SendPacket(packet);
         }
 
-        private void RequestChatMembers()
-        {
-
-        }
-
         public void JoinChat()
         {
 
@@ -121,6 +119,7 @@ namespace Client.Net
             while (true)
             {
                 PacketType packetType = (PacketType)Reader.ReadByte();
+                string jsonPacket = Reader.ReadString();
                 switch (packetType)
                 {
                     case PacketType.ActionDenied:
@@ -128,68 +127,98 @@ namespace Client.Net
                         MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         break;
                     case PacketType.LoginResult:
-                        string jsonPacket = Reader.ReadString();
                         AuthResponseServerPacket loginResultPacket = JsonConvert.DeserializeObject<AuthResponseServerPacket>(jsonPacket);
                         AuthEventArgs authEventArgs = new AuthEventArgs() { Status = loginResultPacket.Status, Message = loginResultPacket.Message };
                         LoginResult?.Invoke(this, authEventArgs);
                         break;
                     case PacketType.RegisterResult:     
-                        string registerJsonPacket = Reader.ReadString();
-                        AuthResponseServerPacket registerResultPacket = JsonConvert.DeserializeObject<AuthResponseServerPacket>(registerJsonPacket);
+                        AuthResponseServerPacket registerResultPacket = JsonConvert.DeserializeObject<AuthResponseServerPacket>(jsonPacket);
                         AuthEventArgs registerEventArgs = new AuthEventArgs() { Status = registerResultPacket.Status, Message = registerResultPacket.Message };
                         RegisterResult?.Invoke(this, registerEventArgs);
                         break;
                     case PacketType.NewChat:
-                        string newChatJsonPacket = Reader.ReadString();
-                        NewChatServerPacket newChatPacket = JsonConvert.DeserializeObject<NewChatServerPacket>(newChatJsonPacket);
+                        NewChatServerPacket newChatPacket = JsonConvert.DeserializeObject<NewChatServerPacket>(jsonPacket);
                         NewChat?.Invoke(this, new NewChatEventArgs() { Name=newChatPacket.Name, Description=newChatPacket.Description });
                         break;
                     case PacketType.ChatsResult:
-                        string chatsJsonPacket = Reader.ReadString();
-                        ChatsResultServerPacket chatsResultServerPacket = JsonConvert.DeserializeObject<ChatsResultServerPacket>(chatsJsonPacket);
+                        ChatsResultServerPacket chatsResultServerPacket = JsonConvert.DeserializeObject<ChatsResultServerPacket>(jsonPacket);
                         ChatsResult?.Invoke(this, new ChatsResultEventArgs() { Data = chatsResultServerPacket.JsonData });
                         break;
                     case PacketType.Message:
-                        string messageJsonPacket = Reader.ReadString();
-                        Message message = JsonConvert.DeserializeObject<Message>(messageJsonPacket);
-                        MessageReceived?.Invoke(this, new MessageEventArgs() { Message = message });
+                        MessageServerPacket messagePacket = JsonConvert.DeserializeObject<MessageServerPacket>(jsonPacket);
+                        Message message = new Message(messagePacket.Id, messagePacket.ChatId, messagePacket.Content, messagePacket.Date, messagePacket.Sender);
+
+                        MessageReceived?.Invoke(this, new MessageEventArgs() { Message = message, Status = messagePacket.Status, ErrorMessage = messagePacket.Message });
                         break;
                     case PacketType.ChatJoinResult:
-                        string chatJoinJsonPacket = Reader.ReadString();
-                        ChatJoinResponseServerPacket chatJoinResultPacket = JsonConvert.DeserializeObject<ChatJoinResponseServerPacket>(chatJoinJsonPacket);
+                        ChatJoinResponseServerPacket chatJoinResultPacket = JsonConvert.DeserializeObject<ChatJoinResponseServerPacket>(jsonPacket);
                         ChatJoinResult?.Invoke(this, new ChatJoinResultEventArgs() { Status = chatJoinResultPacket.Status, Message = chatJoinResultPacket.Message, ChatId = chatJoinResultPacket.ChatId });
                         break;
                     case PacketType.UserChatsResult:
-                        string userChatsJsonPacket = Reader.ReadString();
-                        UserChatsResultServerPacket userChatsResultPacket = JsonConvert.DeserializeObject<UserChatsResultServerPacket>(userChatsJsonPacket);
+                        UserChatsResultServerPacket userChatsResultPacket = JsonConvert.DeserializeObject<UserChatsResultServerPacket>(jsonPacket);
                         List<Chat> userChats = JsonConvert.DeserializeObject<List<Chat>>(userChatsResultPacket.JsonData);
                         UserChatsResult?.Invoke(this, new UserChatsResultEventArgs(userChats));
                         break;
                     case PacketType.ChatMessagesResult:
-                        string chatMessagesJson = Reader.ReadString();
-                        ChatMessagesResultServerPacket chatMessagesResultPacket = JsonConvert.DeserializeObject<ChatMessagesResultServerPacket>(chatMessagesJson);
+                        ChatMessagesResultServerPacket chatMessagesResultPacket = JsonConvert.DeserializeObject<ChatMessagesResultServerPacket>(jsonPacket);
                         ChatMessagesResult?.Invoke(this, new ChatMessagesEventArgs(chatMessagesResultPacket.ChatMessages));
                         break;
                     case PacketType.ChatMembersResult:
-                        string chatMembersJson = Reader.ReadString();
-                        ChatMembersResultServerPacket chatMembersResult = JsonConvert.DeserializeObject<ChatMembersResultServerPacket>(chatMembersJson);
+                        ChatMembersResultServerPacket chatMembersResult = JsonConvert.DeserializeObject<ChatMembersResultServerPacket>(jsonPacket);
                         ChatMembersResult?.Invoke(this, new ChatMembersEventArgs(chatMembersResult.ChatMembers));
                         break;
                     case PacketType.ChatLeaveResult:
-                        string chatLeaveResultJson = Reader.ReadString();
-                        ChatLeaveResponseServerPacket chatLeaveResult = JsonConvert.DeserializeObject<ChatLeaveResponseServerPacket>(chatLeaveResultJson);
+                        ChatLeaveResponseServerPacket chatLeaveResult = JsonConvert.DeserializeObject<ChatLeaveResponseServerPacket>(jsonPacket);
                         ChatLeaveResult?.Invoke(this, new ChatJoinResultEventArgs() {ChatId = chatLeaveResult.ChatId,  Status = chatLeaveResult.Status, Message = chatLeaveResult.Message });
                         break;
+                    case PacketType.ChatRolesResponse:
+						ChatRolesResponseServerPacket chatRolesResponse = JsonConvert.DeserializeObject<ChatRolesResponseServerPacket>(jsonPacket);
+						ChatRolesResult?.Invoke(this, new ChatRolesResultEventArgs(chatRolesResponse.Roles));
+						break;
+                    case PacketType.ClientInfoResponse:
+						ClientInfoResultServerPacket usernameResponse = JsonConvert.DeserializeObject<ClientInfoResultServerPacket>(jsonPacket);
+						UsernameResult?.Invoke(this, new ClientInfoResultEventArgs(usernameResponse.UserId, usernameResponse.Username));
+                        break;
+                    case PacketType.ChatMemberAdded:
+						NewChatMemberServerPacket newMemberPacket = JsonConvert.DeserializeObject<NewChatMemberServerPacket>(jsonPacket);
+						NewChatMember?.Invoke(this, new NewMemberEventArgs(newMemberPacket.Member) { ChatId = newMemberPacket.ChatId });
+                        break;
+                    case PacketType.ChatMemberRemoved:
+						ChatMemberRemovedServerPacket removedMemberPacket = JsonConvert.DeserializeObject<ChatMemberRemovedServerPacket>(jsonPacket);
+						ChatMemberRemoved?.Invoke(this, new ChatMemberRemoveEventArgs(removedMemberPacket.ChatId, removedMemberPacket.MemberId));
+                        break;
+					case PacketType.ChatMemberKickResult:
+						ChatMemberKickResponseServerPacket kickResponse = JsonConvert.DeserializeObject<ChatMemberKickResponseServerPacket>(jsonPacket);
+						ChatMemberActionResponse?.Invoke(this, new ChatActionEventArgs(kickResponse.Status, kickResponse.Message));
+						break;
+					case PacketType.ChatMemberBanResponse:
+						ChatMemberBanResponseServerPacket banResponse = JsonConvert.DeserializeObject<ChatMemberBanResponseServerPacket>(jsonPacket);
+						ChatMemberActionResponse?.Invoke(this, new ChatActionEventArgs(banResponse.Status, banResponse.Message));
+                        break;
+                    case PacketType.RoleAddResponse:
+						AddRoleResponseServerPacket roleAddResponse = JsonConvert.DeserializeObject<AddRoleResponseServerPacket>(jsonPacket);
+						RoleAddResponse?.Invoke(this, new ServerResponseEventArgs(roleAddResponse.Status, roleAddResponse.Message));
+                        break;
+                    case PacketType.RoleEditResponse:
+                        EditRoleResponseServerPacket roleEditResponse = JsonConvert.DeserializeObject<EditRoleResponseServerPacket>(jsonPacket);
+						RoleEditResponse?.Invoke(this, new ServerResponseEventArgs(roleEditResponse.Status, roleEditResponse.Message));
+						break;
+                    case PacketType.RoleDeleteResponse:
+						RemoveRoleResponseServerPacket roleDeleteResponse = JsonConvert.DeserializeObject<RemoveRoleResponseServerPacket>(jsonPacket);
+						RoleRemoveResponse?.Invoke(this, new ServerResponseEventArgs(roleDeleteResponse.Status, roleDeleteResponse.Message));
+						break;
+					default:
+						break;
 
-                }
+				}
             }
         }
 
         internal void RequestUserChats()
         {
-            Writer.Write((byte)PacketType.UserChatsRequest);
-            Writer.Flush();
-        }
+			BaseClientPacket packet = new BaseClientPacket(PacketType.UserChatsRequest);
+			SendPacket(packet);
+		}
 
         public void RequestChatMembers(int chatId)
         {

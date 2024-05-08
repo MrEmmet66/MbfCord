@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Server.Db;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Server.Chat
 {
-    public class Message
+    public class Message : IEntity
     {
         public Message(User sender, DateTime timeStamp, Channel channel, string content)
         {

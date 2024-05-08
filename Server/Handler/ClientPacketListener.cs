@@ -2,7 +2,10 @@
 using Infrastructure.C2S;
 using Infrastructure.C2S.Auth;
 using Infrastructure.C2S.Chat;
+using Infrastructure.C2S.MemberAction;
 using Infrastructure.C2S.Message;
+using Infrastructure.C2S.Role;
+using Infrastructure.S2C.Auth;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Server.Chat;
@@ -13,11 +16,15 @@ using Server.Handler.Chat;
 using Server.Handler.Chat.ChatCreate;
 using Server.Handler.Chat.ChatJoin;
 using Server.Handler.Chat.ChatMessageRequest;
+using Server.Handler.Chat.MemberAction;
 using Server.Handler.Message;
+using Server.Handler.Roles;
+using Server.Handler.Util;
 using Server.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +33,9 @@ namespace Server.Handler
 {
     internal class ClientPacketListener : IPacketListener
     {
-        private ClientObject listenedClient;
+        private Dictionary<PacketType, IPacketReader<BaseClientPacket>> readers = new Dictionary<PacketType, IPacketReader<BaseClientPacket>>();
+        private HandlerStorage handlerStorage;
+		private ClientObject listenedClient;
         private AuthPacketHandler authPacketHandler;
         private ChatCreatePacketHandler ChatCreatePacketHandler;
         private ChatsRequestPacketHandler chatsRequestPacketHandler;
@@ -38,8 +47,19 @@ namespace Server.Handler
         private MessagePacketHandler messagePacketHandler;
         public ClientPacketListener(ClientObject client)
         {
+            handlerStorage = new HandlerStorage();
             listenedClient = client;
 			authPacketHandler = new AuthPacketHandler(client);
+            handlerStorage.AddHandler(authPacketHandler);
+            handlerStorage.AddHandler(new ChatRolesRequestHandler(client));
+            handlerStorage.AddHandler(new ChatMemberKickRequestHandler(client));
+            handlerStorage.AddHandler(new ChatMemberMuteRequestHandler(client));
+			handlerStorage.AddHandler(new ChatMemberBanRequestHandler(client));
+            handlerStorage.AddHandler(new AddRoleHandler(client));
+			handlerStorage.AddHandler(new EditRolePacketHandler(client));
+			handlerStorage.AddHandler(new RoleRemovePacketHandler(client));
+			handlerStorage.AddHandler(new AssignRolePacketHandler(client));
+			readers.Add(PacketType.LoginRequest, new AuthPacketReader());
 			ChatCreatePacketHandler = new ChatCreatePacketHandler(client);
 			chatsRequestPacketHandler = new ChatsRequestPacketHandler(client);
 			chatJoinPacketHandler = new ChatJoinPacketHandler(client);
@@ -58,42 +78,39 @@ namespace Server.Handler
                 try
                 {
                     PacketType packetType = (PacketType)listenedClient.Reader.ReadByte();
-                    Console.WriteLine($"NEW PACKET: {packetType.ToString()}");
-                    switch (packetType)
+                    string jsonPacket = listenedClient.Reader.ReadString();
+					Console.WriteLine($"NEW PACKET: {packetType.ToString()}");
+					switch (packetType)
                     {
                         case PacketType.Message:
-                            string jsonMessagePacket = listenedClient.Reader.ReadString();
-                            MessageClientPacket messagePacket = JsonConvert.DeserializeObject<MessageClientPacket>(jsonMessagePacket);
+                            MessageClientPacket messagePacket = JsonConvert.DeserializeObject<MessageClientPacket>(jsonPacket);
                             Console.WriteLine($"NEW MESSAGE PACKET WITH DATA: {messagePacket.MessageContent}");
                             await messagePacketHandler.HandlePacketAsync(messagePacket);
                             break;
                         case PacketType.RegisterRequest:
-                            string jsonRegisterPacket = listenedClient.Reader.ReadString();
-                            AuthClientPacket registerRequestPacket = JsonConvert.DeserializeObject<AuthClientPacket>(jsonRegisterPacket);
+                            AuthClientPacket registerRequestPacket = JsonConvert.DeserializeObject<AuthClientPacket>(jsonPacket);
                             registerRequestPacket.Type = PacketType.RegisterRequest;
                             Console.WriteLine($"NEW LOGIN REQUEST WITH DATA: {registerRequestPacket.Username} | {registerRequestPacket.Password}");
-                            authPacketHandler.HandlePacket(registerRequestPacket);
+                            await authPacketHandler.HandlePacketAsync(registerRequestPacket);
                             break;
                         case PacketType.LoginRequest:
-                            string jsonPacket = listenedClient.Reader.ReadString();
                             AuthClientPacket loginRequestPacket = JsonConvert.DeserializeObject<AuthClientPacket>(jsonPacket);
-                            Console.WriteLine($"NEW LOGIN REQUEST WITH DATA: {loginRequestPacket.Username} | {loginRequestPacket.Password}");
-                            authPacketHandler.HandlePacket(loginRequestPacket);
+							loginRequestPacket.Type = PacketType.LoginRequest;
+							Console.WriteLine($"NEW LOGIN REQUEST WITH DATA: {loginRequestPacket.Username} | {loginRequestPacket.Password}");
+                            await authPacketHandler.HandlePacketAsync(loginRequestPacket);
                             break;
                         case PacketType.ChatCreate:
-                            string jsonChatPacket = listenedClient.Reader.ReadString();
-                            ChatCreateClientPacket chatPacket = JsonConvert.DeserializeObject<ChatCreateClientPacket>(jsonChatPacket);
+                            ChatCreateClientPacket chatPacket = JsonConvert.DeserializeObject<ChatCreateClientPacket>(jsonPacket);
                             Console.WriteLine($"NEW CHAT CREATE REQUEST WITH DATA: {chatPacket.Name} | {chatPacket.Description}");
-                            ChatCreatePacketHandler.HandlePacket(chatPacket);
+                            await ChatCreatePacketHandler.HandlePacketAsync(chatPacket);
                             break;
                         case PacketType.ChatsRequest:
-                            string chatsRequestJson = listenedClient.Reader.ReadString();
-                            BaseChatRequestClientPacket chatsRequestPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(chatsRequestJson);
-                            await chatsRequestPacketHandler.HandlePacketAsync(chatsRequestPacket);
+                            BaseChatRequestClientPacket chatsRequestPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonPacket);
+							Console.WriteLine($"NEW CHATS REQUEST");
+							await chatsRequestPacketHandler.HandlePacketAsync(chatsRequestPacket);
                             break;
                         case PacketType.ChatJoinRequest:
-                            string jsonJoinPacket = listenedClient.Reader.ReadString();
-                            BaseChatRequestClientPacket joinPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonJoinPacket);
+                            BaseChatRequestClientPacket joinPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonPacket);
                             Console.WriteLine($"NEW CHAT JOIN REQUEST WITH DATA: {joinPacket.ChatId}");
                             await chatJoinPacketHandler.HandlePacketAsync(joinPacket);
                             break;
@@ -101,24 +118,68 @@ namespace Server.Handler
                             await userChatRequest.HandlePacketAsync(new BaseClientPacket(PacketType.UserChatsRequest));
                             break;
                         case PacketType.ChatMessagesRequest:
-                            string jsonChatMessagesPacket = listenedClient.Reader.ReadString();
-                            BaseChatRequestClientPacket chatMessagesPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonChatMessagesPacket);
+                            BaseChatRequestClientPacket chatMessagesPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonPacket);
                             Console.WriteLine($"NEW CHAT MESSAGE REQUEST");
                             await chatMessageRequestHandler.HandlePacketAsync(chatMessagesPacket);
                             break;
                         case PacketType.ChatMembersRequest:
-                            string jsonChatMembersPacket = listenedClient.Reader.ReadString();
-                            BaseChatRequestClientPacket chatMembersPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonChatMembersPacket);
+                            BaseChatRequestClientPacket chatMembersPacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonPacket);
                             await chatMembersHandler.HandlePacketAsync(chatMembersPacket);
                             break;
                         case PacketType.ChatLeaveRequest:
-                            string jsonLeavePacket = listenedClient.Reader.ReadString();
-                            BaseChatRequestClientPacket chatLeavePacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonLeavePacket);
+                            BaseChatRequestClientPacket chatLeavePacket = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonPacket);
                             await chatLeaveHandler.HandlePacketAsync(chatLeavePacket);
                             break;
-                    }
+                        case PacketType.ChatRolesRequest:
+                            BaseChatRequestClientPacket rolesRequest = JsonConvert.DeserializeObject<BaseChatRequestClientPacket>(jsonPacket);
+							ChatRolesRequestHandler handler = handlerStorage.GetHandler<ChatRolesRequestHandler>();
+                            await handler.HandlePacketAsync(rolesRequest);
+                            break;
+                        case PacketType.ClientInfoRequest:
+                            ClientInfoResultServerPacket response = new ClientInfoResultServerPacket(listenedClient.User.Id, listenedClient.User.Username);
+                            listenedClient.SendPacket(response);
+                            break;
+                        case PacketType.ChatMemberKickRequest:
+							ChatMemberKickRequestClientPacket kickRequest = JsonConvert.DeserializeObject<ChatMemberKickRequestClientPacket>(jsonPacket);
+							ChatMemberKickRequestHandler kickHandler = handlerStorage.GetHandler<ChatMemberKickRequestHandler>();
+							await kickHandler.HandlePacketAsync(kickRequest);
+							break;
+                        case PacketType.ChatMemberMuteRequest:
+							ChatMemberMuteRequestClientPacket muteRequest = JsonConvert.DeserializeObject<ChatMemberMuteRequestClientPacket>(jsonPacket);
+							ChatMemberMuteRequestHandler muteHandler = handlerStorage.GetHandler<ChatMemberMuteRequestHandler>();
+							await muteHandler.HandlePacketAsync(muteRequest);
+                            break;
+                        case PacketType.ChatMemberBanRequest:
+							ChatMemberBanRequestClientPacket banRequest = JsonConvert.DeserializeObject<ChatMemberBanRequestClientPacket>(jsonPacket);
+							ChatMemberBanRequestHandler banHandler = handlerStorage.GetHandler<ChatMemberBanRequestHandler>();
+							await banHandler.HandlePacketAsync(banRequest);
+							break;
+                        case PacketType.RoleAddRequest:
+							AddRoleRequestClientPacket roleAddRequest = JsonConvert.DeserializeObject<AddRoleRequestClientPacket>(jsonPacket);
+							AddRoleHandler addRoleHandler = handlerStorage.GetHandler<AddRoleHandler>();
+							await addRoleHandler.HandlePacketAsync(roleAddRequest);
+							break;
+                        case PacketType.RoleEditRequest:
+							EditRoleRequestClientPacket roleEditRequest = JsonConvert.DeserializeObject<EditRoleRequestClientPacket>(jsonPacket);
+							EditRolePacketHandler editRoleHandler = handlerStorage.GetHandler<EditRolePacketHandler>();
+							await editRoleHandler.HandlePacketAsync(roleEditRequest);
+							break;
+                        case PacketType.RoleDeleteRequest:
+							RemoveRoleRequestClientPacket roleDeleteRequest = JsonConvert.DeserializeObject<RemoveRoleRequestClientPacket>(jsonPacket);
+							RoleRemovePacketHandler removeRoleHandler = handlerStorage.GetHandler<RoleRemovePacketHandler>();
+							await removeRoleHandler.HandlePacketAsync(roleDeleteRequest);
+							break;
+                        case PacketType.RoleAssignRequest:
+							RoleAssignRequestClientPacket roleAssignRequest = JsonConvert.DeserializeObject<RoleAssignRequestClientPacket>(jsonPacket);
+							AssignRolePacketHandler assignRoleHandler = handlerStorage.GetHandler<AssignRolePacketHandler>();
+							await assignRoleHandler.HandlePacketAsync(roleAssignRequest);
+							break;
+
+						default:
+							break;
+					}
                 }
-                catch (DbUpdateException ex)
+                catch (AggregateException ex)
                 {
                     listenedClient.Disconnect();
                     Console.WriteLine(ex.Message);

@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.S2C;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Server.Chat;
 using Server.Db;
@@ -39,7 +40,15 @@ namespace Server.Net
             Writer.Flush();
         }
 
-        public void SendActionDenied(string message)
+        public void SendPacket<T>(T packet) where T : BaseServerPacket
+		{
+			Writer.Write((byte)packet.Type);
+			Writer.Flush();
+			Writer.Write(packet.Serialize());
+			Writer.Flush();
+		}
+
+		public void SendActionDenied(string message)
         {
             Writer.Write((byte)PacketType.ActionDenied);
             Writer.Flush();

@@ -5,6 +5,7 @@ using Server.Db;
 using Microsoft.EntityFrameworkCore;
 using Server.Chat;
 using System.Net.Sockets;
+using Server.Services;
 
 namespace Server
 {
@@ -14,10 +15,18 @@ namespace Server
         static void Main(string[] args)
         {
             HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
-            builder.Services.AddDbContext<ApplicationContext>().AddScoped<UserRepository>();
-            builder.Services.AddScoped<ChatRepository>();
-            builder.Services.AddScoped<MessageRepository>();
-            using IHost host = builder.Build();
+            builder.Services.AddDbContext<ApplicationContext>();
+            builder.Services.AddTransient<IUserRepository, UserRepository>();
+            builder.Services.AddTransient<ChatRepository>();
+            builder.Services.AddTransient<MessageRepository>();
+			builder.Services.AddTransient<RoleRepository>();
+            builder.Services.AddTransient<MemberRestrictionRepository>();
+			builder.Services.AddTransient<MessageService>();
+			builder.Services.AddTransient<UserService>();
+            builder.Services.AddTransient<MemberRestrictionService>();
+			builder.Services.AddTransient<ChatService>();
+            builder.Services.AddTransient<RoleService>();
+			using IHost host = builder.Build();
             ServiceProvider = host.Services;
             host.RunAsync();
             ServerObject serverObject = ServerObject.Instance;

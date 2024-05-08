@@ -10,13 +10,29 @@ using System.Threading.Tasks;
 
 namespace Server.Db
 {
-    internal class UserRepository : IRepository<User>
+    interface IUserRepository
+    {
+		IQueryable<User> GetAll();
+		Task<IQueryable<User>> GetAllAsync();
+		User GetById(int id);
+		User GetByIdWithIncludes(int id);
+        Task<User> GetByUsernameAsync(string username);
+		Task<User> GetByIdAsync(int id);
+		Task<User> GetByIdWithIncludesAsync(int id);
+		bool Remove(int id);
+		User Add(in User sender);
+		User Update(in User sender);
+        void Save();
+		Task<int> SaveAsync();
+	}
+    internal class UserRepository : IUserRepository
     {
         private readonly ApplicationContext _context;
         public UserRepository()
         {
-                _context = Program.ServiceProvider.GetRequiredService<ApplicationContext>();
-        }
+            _context = Program.ServiceProvider.GetRequiredService<ApplicationContext>();
+
+		}
 
         public User GetUserByName(string name)
         {
@@ -49,13 +65,13 @@ namespace Server.Db
 
         public User GetByIdWithIncludes(int id)
         {
-            throw new NotImplementedException();
-        }
+			return _context.Users.Include(x => x.Roles).FirstOrDefault(x => x.Id == id);
+		}
 
         public Task<User> GetByIdWithIncludesAsync(int id)
         {
-            throw new NotImplementedException();
-        }
+			return _context.Users.Include(x => x.Roles).Include(x => x.MemberRestrictions).FirstOrDefaultAsync(x => x.Id == id);
+		}
 
         public bool Remove(int id)
         {
@@ -66,9 +82,9 @@ namespace Server.Db
             return true;
         }
 
-        public int Save()
+        public void Save()
         {
-            return _context.SaveChanges();
+            _context.SaveChanges();
         }
 
         public Task<int> SaveAsync()
@@ -90,5 +106,11 @@ namespace Server.Db
         {
             return _context.Users.Update(sender).Entity;
         }
-    }
+
+		public async  Task<User> GetByUsernameAsync(string username)
+		{
+            User user = await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
+            return user;
+		}
+	}
 }

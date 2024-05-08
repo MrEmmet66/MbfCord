@@ -38,7 +38,6 @@ namespace Server.Handler.Chat
                 }
             }
             string channelsJson = JsonConvert.SerializeObject(userChannels);
-            string json = new UserChatsResultServerPacket(channelsJson).Serialize();
             UserChatsResultServerPacket userChatsResult = new UserChatsResultServerPacket(channelsJson);
             Sender.SendPacket(PacketType.UserChatsResult, userChatsResult.Serialize());
             Console.WriteLine("user chat otbayraktaren");
