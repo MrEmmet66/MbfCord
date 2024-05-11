@@ -59,6 +59,7 @@ namespace Server.Handler.Chat.ChatCreate
 			string json = newChatServerPacket.Serialize();
 			Sender.SendPacket(PacketType.NewChat, json);
 			ChatJoinResponseServerPacket chatJoinResponseServerPacket = new ChatJoinResponseServerPacket(chat.Id, true, "Chat created successfully");
+			chatJoinResponseServerPacket.Chat = new Infrastructure.S2C.Model.ChatClientModel(chat.Id, chat.Name, chat.Description);
 			Sender.SendPacket(chatJoinResponseServerPacket);
 		}
 	}

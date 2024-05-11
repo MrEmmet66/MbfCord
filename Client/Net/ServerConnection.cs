@@ -98,12 +98,6 @@ namespace Client.Net
 			SendPacket(packet);
         }
 
-        public void RequestChats()
-        {
-            BaseClientPacket packet = new BaseClientPacket(PacketType.ChatsRequest);
-            SendPacket(packet);
-        }
-
         public void RequestChatMessages(int chatId)
         {
             BaseChatRequestClientPacket packet = new BaseChatRequestClientPacket(PacketType.ChatMessagesRequest, chatId);
@@ -142,7 +136,8 @@ namespace Client.Net
                         break;
                     case PacketType.ChatsResult:
                         ChatsResultServerPacket chatsResultServerPacket = JsonConvert.DeserializeObject<ChatsResultServerPacket>(jsonPacket);
-                        ChatsResult?.Invoke(this, new ChatsResultEventArgs() { Data = chatsResultServerPacket.JsonData });
+                        var chats = JsonConvert.DeserializeObject<List<Chat>>(chatsResultServerPacket.JsonData);
+						ChatsResult?.Invoke(this, new ChatsResultEventArgs(chats));
                         break;
                     case PacketType.Message:
                         MessageServerPacket messagePacket = JsonConvert.DeserializeObject<MessageServerPacket>(jsonPacket);
@@ -152,7 +147,7 @@ namespace Client.Net
                         break;
                     case PacketType.ChatJoinResult:
                         ChatJoinResponseServerPacket chatJoinResultPacket = JsonConvert.DeserializeObject<ChatJoinResponseServerPacket>(jsonPacket);
-                        ChatJoinResult?.Invoke(this, new ChatJoinResultEventArgs() { Status = chatJoinResultPacket.Status, Message = chatJoinResultPacket.Message, ChatId = chatJoinResultPacket.ChatId });
+                        ChatJoinResult?.Invoke(this, new ChatJoinResultEventArgs() { Status = chatJoinResultPacket.Status, Message = chatJoinResultPacket.Message, ChatId = chatJoinResultPacket.ChatId, ChatModel = chatJoinResultPacket.Chat });
                         break;
                     case PacketType.UserChatsResult:
                         UserChatsResultServerPacket userChatsResultPacket = JsonConvert.DeserializeObject<UserChatsResultServerPacket>(jsonPacket);
@@ -232,5 +227,7 @@ namespace Client.Net
         public int ChatId { get; set; }
         public bool Status { get; set; }
         public string Message { get; set; }
+
+        public ChatClientModel ChatModel { get; set; }
     }
 }

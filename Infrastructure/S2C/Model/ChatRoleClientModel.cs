@@ -18,7 +18,6 @@ namespace Infrastructure.S2C.Model
 			CanSetRole = setRolePermision;
 			CanBan = banPermission;
 			CanMute = mutePermision;
-			CanPerformAction = CanPerform();
 		}
 		public ChatRoleClientModel(int id, string name, bool isOwner)
 		{
@@ -30,7 +29,6 @@ namespace Infrastructure.S2C.Model
 			CanSetRole = true;
 			CanBan = true;
 			CanMute = true;
-			CanPerformAction = CanPerform();
 		}
 		public int Id { get; set; }
 		public string Name { get; set; }
@@ -40,11 +38,12 @@ namespace Infrastructure.S2C.Model
 		public bool CanBan { get; set; }
 		public bool CanMute { get; set; }
 		public bool IsOwner { get; set; }
-		public bool CanPerformAction { get; set; }
-
-		private bool CanPerform()
+		public bool CanPerformAction
 		{
-			return IsOwner || CanSendMessage || CanKick || CanSetRole || CanBan || CanMute;
+			get
+			{
+				return IsOwner || CanSendMessage || CanKick || CanSetRole || CanBan || CanMute;
+			}
 		}
 
 	}

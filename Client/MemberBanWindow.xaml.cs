@@ -14,14 +14,15 @@ using System.Windows.Shapes;
 
 namespace Client
 {
-    /// <summary>
-    /// Interaction logic for ChatWindow.xaml
-    /// </summary>
-    public partial class ChatWindow : Window
-    {
-        public ChatWindow()
-        {
-            InitializeComponent();
-        }
-    }
+	/// <summary>
+	/// Interaction logic for MemberBanWindow.xaml
+	/// </summary>
+	public partial class MemberBanWindow : Window
+	{
+		public MemberBanWindow()
+		{
+			InitializeComponent();
+			banDatePicker.DisplayDateStart = DateTime.Now.AddDays(1);
+		}
+	}
 }

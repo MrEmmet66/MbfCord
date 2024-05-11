@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Client.MVVM.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,10 @@ namespace Client.Net.Event
 {
     internal class ChatsResultEventArgs : EventArgs
     {
-        public string Data { get; set; }
+		public ChatsResultEventArgs(List<Chat> chats)
+		{
+			Chats = chats;
+		}
+		public List<Chat> Chats { get; set; }
     }
 }

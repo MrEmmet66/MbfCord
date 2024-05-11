@@ -1,0 +1,52 @@
+﻿<Window x:Class="Client.ChatSettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+        mc:Ignorable="d"
+        Title="Chat Settings" Height="450" Width="800" Style="{StaticResource MaterialDesignWindow}">
+
+    <Window.DataContext>
+        <viewmodel:ChatSettingsViewModel/>
+    </Window.DataContext>
+    
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding TargetChat.Name}" FontSize="16" FontWeight="Bold" Grid.Row="0"/>
+        <TabControl TabStripPlacement="Left" Grid.Row="1">
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="General"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    <StackPanel Margin="15 0 0 0">
+                        <TextBlock Text="Name" FontSize="15"/>
+                        <TextBox Text="{Binding TargetChat.Name}"/>
+                        <TextBlock Text="Description" FontSize="15" Margin="0 10 0 0"/>
+                        <TextBox Text="{Binding TargetChat.Description}"/>
+                        <Button Content="Save" Command="{Binding SaveChatCommand}" Margin="0 10 0 0"/>
+                    </StackPanel>
+                </TabItem.Content>
+            </TabItem>
+
+            <TabItem>
+                <TabItem.Header>
+                    <TextBlock Text="Roles"/>
+                </TabItem.Header>
+                <TabItem.Content>
+                    
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Window>

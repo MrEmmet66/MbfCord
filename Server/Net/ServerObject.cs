@@ -42,7 +42,7 @@ namespace Server.Net
         public void Start()
         {
             tcpListener = new TcpListener(System.Net.IPAddress.Any, 6666);
-            tcpListener.Start();
+                tcpListener.Start();
             Console.WriteLine("Server started");
             while (true)
             {

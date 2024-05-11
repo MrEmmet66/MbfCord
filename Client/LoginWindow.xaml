@@ -5,17 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="296">
-
+        Title="LoginWindow" Height="450" Width="296" Style="{StaticResource MaterialDesignWindow}">
     <Window.DataContext>
         <viewmodel:LoginViewModel/>
     </Window.DataContext>
 
-    <Grid>
+    <Grid Margin="5">
         <StackPanel VerticalAlignment="Top">
-            <TextBox x:Name="txtUsername" Margin="10" Width="200" Height="30" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
-            <TextBox x:Name="txtPassword" Margin="10" Width="200" Height="30" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtUsername" materialDesign:HintAssist.Hint="Username" Margin="10" Width="200" Height="30" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="txtPassword" materialDesign:HintAssist.Hint="Password" Style="{DynamicResource MaterialDesignTextBox}" Margin="10" Width="200" Height="30" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
             <Button x:Name="btnLogin" Margin="10" Width="200" Height="30" Content="Login" Command="{Binding TryLoginCommand}" Click="btnLogin_Click"/>
             <Button x:Name="btnRegister" Margin="10" Width="200" Height="30" Content="Register" Command="{Binding OpenRegisterWindowCommand}"/>
             <TextBlock x:Name="txtError" Margin="10" Width="200" Height="30" Text="{Binding Error}" TextAlignment="Center"/>

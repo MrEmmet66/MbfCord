@@ -41,6 +41,7 @@ namespace Server.Handler.Chat.ChatJoin
 			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			if (chat == null)
 				return;
+
 			if (chat.Members.Contains(Sender.User))
 			{
 				ChatJoinResponseServerPacket response = new ChatJoinResponseServerPacket(chat.Id, false, "You are already in this chat");
@@ -48,6 +49,7 @@ namespace Server.Handler.Chat.ChatJoin
 				Sender.SendPacket(PacketType.ChatJoinResult, jsonResponse);
 				return;
 			}
+
 			User user = await userRepository.GetByIdWithIncludesAsync(Sender.User.Id);
 			if (memberRestrictionService.IsUserBanned(user))
 			{
@@ -55,19 +57,23 @@ namespace Server.Handler.Chat.ChatJoin
 				Sender.SendPacket(response);
 				return;
 			}
+
 			Role memberRole = GetMemberRole(chat);
 			chat.Members.Add(Sender.User);
 			user.Roles.Add(memberRole);
+
 			if (user.Channels == null)
 				user.Channels = new List<Channel>();
+
 			user.Channels.Add(chat);
 			chatRepository.Update(chat);
 			userRepository.Update(user);
-			await userRepository.SaveAsync();
 			await chatRepository.SaveAsync();
+
 			ChatMemberClientModel member = new ChatMemberClientModel(chat.Id, user.Username, true, new ChatRoleClientModel(memberRole.Id, memberRole.Name, true, false, false, false, false));
+			ChatClientModel chatModel = new ChatClientModel(chat.Id, chat.Name, chat.Description);
 			chatService.SendPacketToClientsInChat(chat, Sender.User.Id, Sender.User.Id, new NewChatMemberServerPacket(chat.Id, member));
-			ChatJoinResponseServerPacket responsePacket = new ChatJoinResponseServerPacket(chat.Id, true);
+			ChatJoinResponseServerPacket responsePacket = new ChatJoinResponseServerPacket(chat.Id, true, chatModel);
 			Sender.SendPacket(responsePacket);
 			User system = userRepository.GetById(1);
 			messageService.AddChatMessage(new Server.Chat.Message(system, DateTime.Now, chat, $"{user.Username} joined this chat"));

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Client"
         xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="RegisterWindow" Height="250" Width="300">
+        Title="RegisterWindow" Height="250" Width="300" Style="{StaticResource MaterialDesignWindow}">
     <Window.DataContext>
         <viewmodel:RegisterViewModel/>
     </Window.DataContext>

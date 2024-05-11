@@ -1,0 +1,37 @@
+﻿<Window x:Class="Client.ChatsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Client"
+        xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+        mc:Ignorable="d"
+        Title="ChatsWindow" Height="450" Width="800" Style="{StaticResource MaterialDesignWindow}">
+
+    <Window.DataContext>
+        <viewmodel:ChatsWindowViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <ListBox x:Name="chatsListBox" ItemsSource="{Binding Chats}" SelectedItem="{Binding SelectedChat}"  Grid.Column="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" Margin="5"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Информация о выбранном чате -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock x:Name="ChatName" Text="{Binding SelectedChat.Name}" FontSize="18" FontWeight="Bold"/>
+            <TextBlock x:Name="ChatDescription" Text="{Binding SelectedChat.Description}" TextWrapping="Wrap" Margin="0,5,0,10"/>
+            <Button x:Name="JoinChatButton" Content="Join" Command="{Binding JoinChatCommand}" />
+        </StackPanel>
+        
+        <Button Content="Create chat" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding CreateChatCommand}" Margin="10"/>
+    </Grid>
+</Window>
