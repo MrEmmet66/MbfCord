@@ -10,25 +10,28 @@ using System;
 using Infrastructure;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Infrastructure.C2S;
 
 namespace Server.Handler.Chat.ChatCreate
 {
-	internal class ChatCreatePacketHandler : PacketHa
+	internal class ChatCreatePacketHandler : BasePacketHandler
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly IUserRepository userRepository;
-		public ChatCreatePacketHandler(ClientObject sender)
+		public ChatCreatePacketHandler(ClientObject sender) : base(sender)
 		{
-			this.sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 		}
 
-		public ClientObject sender { get; set; }
 
-
-		public async Task HandlePacketAsync(ChatCreateClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
+			if(!(clientPacket is ChatCreateClientPacket packet))
+			{
+				await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			User user = await userRepository.GetByIdAsync(sender.User.Id);
 			string name = packet.Name;
 			string description = packet.Description;
