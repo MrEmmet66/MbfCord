@@ -32,7 +32,7 @@ namespace Infrastructure.S2C.Model
 		}
 		public int Id { get; set; }
 		public string Name { get; set; }
-		public bool CanSendMessage { get; set; }
+		public bool CanSendMessage { get; set; } = true;
 		public bool CanKick { get; set; }
 		public bool CanSetRole { get; set; }
 		public bool CanBan { get; set; }

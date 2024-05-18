@@ -13,27 +13,23 @@ using System.Runtime.CompilerServices;
 
 namespace Server.Handler.Chat.ChatCreate
 {
-	internal class ChatCreatePacketHandler : IPacketHandler<ChatCreateClientPacket>
+	internal class ChatCreatePacketHandler : PacketHa
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly IUserRepository userRepository;
 		public ChatCreatePacketHandler(ClientObject sender)
 		{
-			Sender = sender;
+			this.sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 		}
 
-		public ClientObject Sender { get; set; }
+		public ClientObject sender { get; set; }
 
-		public void HandlePacket(ChatCreateClientPacket packet)
-		{
-			throw new NotImplementedException();
-		}
 
 		public async Task HandlePacketAsync(ChatCreateClientPacket packet)
 		{
-			User user = await userRepository.GetByIdAsync(Sender.User.Id);
+			User user = await userRepository.GetByIdAsync(sender.User.Id);
 			string name = packet.Name;
 			string description = packet.Description;
 			Channel chat = new Channel(name, description);
@@ -57,10 +53,10 @@ namespace Server.Handler.Chat.ChatCreate
 			await chatRepository.SaveAsync();
 			NewChatServerPacket newChatServerPacket = new NewChatServerPacket(chat.Id, chat.Name, chat.Description);
 			string json = newChatServerPacket.Serialize();
-			Sender.SendPacket(PacketType.NewChat, json);
+			sender.SendPacket(PacketType.NewChat, json);
 			ChatJoinResponseServerPacket chatJoinResponseServerPacket = new ChatJoinResponseServerPacket(chat.Id, true, "Chat created successfully");
 			chatJoinResponseServerPacket.Chat = new Infrastructure.S2C.Model.ChatClientModel(chat.Id, chat.Name, chat.Description);
-			Sender.SendPacket(chatJoinResponseServerPacket);
+			sender.SendPacket(chatJoinResponseServerPacket);
 		}
 	}
 }

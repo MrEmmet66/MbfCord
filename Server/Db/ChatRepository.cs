@@ -54,8 +54,8 @@ namespace Server.Db
 
         public bool Remove(int id)
         {
-            throw new NotImplementedException();
-        }
+            return context.Channels.Remove(context.Channels.Find(id)) != null;
+		}
 
         public int Save()
         {

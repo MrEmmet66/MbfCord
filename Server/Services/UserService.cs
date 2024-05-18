@@ -40,6 +40,13 @@ namespace Server.Services
 
 		}
 
+		public void SetUserRole(User user, Role role)
+		{
+			Role userRole = user.Roles.FirstOrDefault(r => r.Chat.Id == role.Chat.Id);
+			user.Roles[user.Roles.IndexOf(userRole)] = role;
+			roleRepository.Save();
+		}
+
 		public Role GetUserRole(User user, Channel chat)
 		{
 			Role role = user.Roles.FirstOrDefault(r => r.Chat.Id == chat.Id);

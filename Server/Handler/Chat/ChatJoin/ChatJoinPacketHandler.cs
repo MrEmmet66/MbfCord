@@ -72,12 +72,10 @@ namespace Server.Handler.Chat.ChatJoin
 
 			ChatMemberClientModel member = new ChatMemberClientModel(chat.Id, user.Username, true, new ChatRoleClientModel(memberRole.Id, memberRole.Name, true, false, false, false, false));
 			ChatClientModel chatModel = new ChatClientModel(chat.Id, chat.Name, chat.Description);
-			chatService.SendPacketToClientsInChat(chat, Sender.User.Id, Sender.User.Id, new NewChatMemberServerPacket(chat.Id, member));
+			chatService.SendPacketToClientsInChat(chat, Sender.User.Id, new NewChatMemberServerPacket(chat.Id, member));
 			ChatJoinResponseServerPacket responsePacket = new ChatJoinResponseServerPacket(chat.Id, true, chatModel);
 			Sender.SendPacket(responsePacket);
-			User system = userRepository.GetById(1);
-			messageService.AddChatMessage(new Server.Chat.Message(system, DateTime.Now, chat, $"{user.Username} joined this chat"));
-			Console.WriteLine("chat join handled");
+			messageService.AddSystemMessage($"{user.Username} joined this chat", chat);
 		}
 		private Role GetMemberRole(Channel chat)
 		{

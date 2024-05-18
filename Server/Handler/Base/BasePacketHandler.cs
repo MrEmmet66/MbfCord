@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Handler.Util
+namespace Server.Handler.Base
 {
-	internal class PacketMapper
+	internal class BasePacketHandler
 	{
 	}
 }

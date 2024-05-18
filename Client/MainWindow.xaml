@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Mbfcord" Height="472" Width="800" WindowState="Maximized" Style="{StaticResource MaterialDesignWindow}">
+        Title="MbfCord" Height="472" Width="800" WindowState="Maximized" Style="{StaticResource MaterialDesignWindow}">
 
     <Window.DataContext>
         <viewmodel:MainViewModel/>
@@ -21,6 +22,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto" MinHeight="50" MaxHeight="100"/>
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <TextBox x:Name="messageTextBox" Style="{DynamicResource MaterialDesignFilledTextBox}" Text="{Binding Message}" Grid.Column="1" Grid.Row="2"></TextBox>
         <Button x:Name="sendButton" Content="Send" Command="{Binding SendMessageCommand}" Grid.Column="4" Grid.Row="3" VerticalAlignment="Bottom"/>
@@ -39,16 +41,16 @@
             </ListBox.ItemTemplate>
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Set role" Command="{Binding OpenRoleSetWindowCommand}"/>
+                    <MenuItem Header="Set role" Visibility="{Binding ClientMember.Role.CanSetRole, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding OpenRoleSetWindowCommand}"/>
                     <Separator/>
-                    <MenuItem Foreground="#d62d2d" Command="{Binding KickMemberCommand}" Header="Kick"/>
-                    <MenuItem Header="Mute" Command="{Binding OpenMemberMuteWindowCommand}" Foreground="#d62d2d"/>
-                    <MenuItem Header="Unmute" Command="{Binding UnmuteMemberCommand}" Foreground="#d62d2d"/>
-                    <MenuItem Header="Ban" Foreground="#d62d2d" Command="{Binding OpenMemberBanWindowCommand}"/>
+                    <MenuItem Foreground="#d62d2d"  Visibility="{Binding ClientMember.Role.CanKick, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding KickMemberCommand}" Header="Kick"/>
+                    <MenuItem Header="Mute"  Visibility="{Binding ClientMember.Role.CanMute, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding OpenMemberMuteWindowCommand}" Foreground="#d62d2d"/>
+                    <MenuItem Header="Unmute"  Visibility="{Binding ClientMember.Role.CanMute, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding UnmuteMemberCommand}" Foreground="#d62d2d"/>
+                    <MenuItem Header="Ban"  Visibility="{Binding ClientMember.Role.CanBan, RelativeSource={RelativeSource AncestorType=ContextMenu}, Converter={StaticResource BooleanToVisibilityConverter}}" Foreground="#d62d2d" Command="{Binding OpenMemberBanWindowCommand}"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
-        <ListBox x:Name ="messagesListbox" Grid.Column="1" Grid.Row="0" ItemsSource="{Binding ChatMessages}">
+        <ListBox x:Name ="messagesListbox" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" ItemsSource="{Binding ChatMessages}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0 0 0 15">
@@ -76,11 +78,26 @@
             
             <ListBox.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Header="Chat Settings" Command="{Binding OpenChatSettingsWindowCommand}"/>
-                    <MenuItem Foreground="#d62d2d" Command="{Binding LeaveChatCommand}" CommandParameter="{Binding SelectedChat.Id}" Header="Leave chat"/>
+                    <MenuItem Header="Chat Settings" Visibility="{Binding ClientMember.Role.IsOwner, Converter={StaticResource BooleanToVisibilityConverter}}" Command="{Binding OpenChatSettingsWindowCommand}"/>
+                    <MenuItem Foreground="#d62d2d" Command="{Binding LeaveChatCommand}" Visibility="{Binding CanLeave, Converter={StaticResource BooleanToVisibilityConverter}}" CommandParameter="{Binding SelectedChat.Id}" Header="Leave chat"/>
                 </ContextMenu>
             </ListBox.ContextMenu>
         </ListBox>
         <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding OpenChatsWindowCommand}" Background="#3b3b3b" Content="+" Margin="5 0 10 0" Grid.Column="0" Grid.Row="1"/>
+        <WrapPanel Grid.Row="2">
+            <materialDesign:PackIcon Kind="Account" Width="30" Height="30"/>
+            <TextBlock Text="{Binding ClientInfo.Name}" FontSize="15" Margin="0 5 0 0" FontWeight="Bold"/>
+            <Button x:Name="changeUsernameButton" Style="{DynamicResource MaterialDesignFlatButton}" Click="changeUsernameButton_Click">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="Pencil" Width="20" Height="20"/>
+                </StackPanel>
+                <Button.ContextMenu>
+                    <ContextMenu>
+                        <TextBox Text="{Binding ClientInfo.Name}"/>
+                        <Button Content="Save" Command="{Binding ChangeUsernameCommand}" Width="70"/>
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+        </WrapPanel>
     </Grid>
 </Window>

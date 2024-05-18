@@ -25,5 +25,14 @@ namespace Client
         {
             InitializeComponent();
         }
-    }
+
+		private void changeUsernameButton_Click(object sender, RoutedEventArgs e)
+		{
+            Button button = sender as Button;
+            ContextMenu contextMenu = button.ContextMenu;
+			contextMenu.PlacementTarget = button;
+			contextMenu.IsOpen = true;
+            e.Handled = true;
+		}
+	}
 }

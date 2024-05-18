@@ -13,7 +13,7 @@ namespace Server.Services
 {
 	internal class ChatService
 	{
-		public void SendPacketToClientsInChat<T>(Channel chat, int memberId, int senderId, T packet) where T : BaseServerPacket
+		public void SendPacketToClientsInChat<T>(Channel chat, int senderId, T packet) where T : BaseServerPacket
 		{
 			foreach (var member in chat.Members)
 			{
@@ -24,6 +24,18 @@ namespace Server.Services
 					{
 						client.SendPacket(packet);
 					}
+				}
+			}
+		}
+
+		public void SendPacketToClientsInChat<T>(Channel chat, T packet) where T : BaseServerPacket
+		{
+			foreach (var member in chat.Members)
+			{
+				ClientObject client = ServerObject.Instance.Clients.FirstOrDefault(c => c.User.Id == member.Id);
+				if (client != null)
+				{
+					client.SendPacket(packet);
 				}
 			}
 		}

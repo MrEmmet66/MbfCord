@@ -1,4 +1,5 @@
 ﻿using Infrastructure.C2S.Role;
+using Infrastructure.S2C.Model;
 using Infrastructure.S2C.Roles;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
@@ -18,12 +19,14 @@ namespace Server.Handler.Roles
 	{
 		private readonly RoleRepository roleRepository;
 		private readonly IUserRepository userRepository;
+		private readonly ChatService chatService;
 		public ClientObject Sender { get; set; }
 		public EditRolePacketHandler(ClientObject sender)
 		{
 			Sender = sender;
 			roleRepository = Program.ServiceProvider.GetRequiredService<RoleRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
+			chatService = Program.ServiceProvider.GetRequiredService<ChatService>();
 		}
 
 		public void HandlePacket(EditRoleRequestClientPacket packet)
@@ -56,6 +59,10 @@ namespace Server.Handler.Roles
 			roleRepository.Update(role);
 			await roleRepository.SaveAsync();
 			Sender.SendPacket(new EditRoleResponseServerPacket(true, "Role updated"));
+			ChatRoleClientModel updatedRole = new ChatRoleClientModel(role.Id, role.Name, role.CanSendMessage, role.CanKick, role.CanSetRole, role.CanBan, role.CanMute);
+			updatedRole.IsOwner = role.IsOwner;
+			RoleUpdateServerPacket roleUpdatePacket = new RoleUpdateServerPacket(updatedRole, role.Chat.Id);
+			chatService.SendPacketToClientsInChat(role.Chat, roleUpdatePacket);
 		}
 	}
 }

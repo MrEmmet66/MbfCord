@@ -28,5 +28,14 @@ namespace Client.Net
 		public event EventHandler<ServerResponseEventArgs> RoleAddResponse;
 		public event EventHandler<ServerResponseEventArgs> RoleEditResponse;
 		public event EventHandler<ServerResponseEventArgs> RoleRemoveResponse;
+		public event EventHandler<ServerResponseEventArgs> RoleAssignResponse;
+		public event EventHandler<RoleUpdateEventArgs> RoleUpdated;
+		public event EventHandler<ChatEventArgs> RoleRemoved;
+		public event EventHandler<ChatMemberUpdateEventArgs> ChatMemberUpdated;
+		public event EventHandler<ChatEventArgs> ChatRemove;
+		public event EventHandler<ChatUpdateEventArgs> ChatEdit;
+
+
+
 	}
 }

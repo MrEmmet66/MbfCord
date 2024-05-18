@@ -8,6 +8,7 @@ using Server.Chat;
 using Server.Db;
 using Server.Handler.Base;
 using Server.Net;
+using Server.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Server.Handler.Chat
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly IUserRepository userRepository;
+		private readonly UserService userService;
 		public ClientObject Sender { get; set; }
 
 		public ChatMembersRequestHandler(ClientObject sender)
@@ -27,6 +29,7 @@ namespace Server.Handler.Chat
 			Sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
+			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 		}
 
 		public void HandlePacket(BaseChatRequestClientPacket packet)
@@ -57,7 +60,6 @@ namespace Server.Handler.Chat
 			Sender.SendPacket(PacketType.ChatMembersResult, membersPacket.Serialize());
 		}
 
-		// Get member role
 		private Role GetRoleInChat(Channel chat, int userId)
 		{
 			User user = userRepository.GetByIdWithIncludes(userId);

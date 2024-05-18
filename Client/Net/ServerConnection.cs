@@ -4,6 +4,7 @@ using Infrastructure;
 using Infrastructure.C2S;
 using Infrastructure.C2S.Auth;
 using Infrastructure.C2S.Chat;
+using Infrastructure.S2C;
 using Infrastructure.S2C.Auth;
 using Infrastructure.S2C.Chat;
 using Infrastructure.S2C.MemberAction;
@@ -201,6 +202,30 @@ namespace Client.Net
                     case PacketType.RoleDeleteResponse:
 						RemoveRoleResponseServerPacket roleDeleteResponse = JsonConvert.DeserializeObject<RemoveRoleResponseServerPacket>(jsonPacket);
 						RoleRemoveResponse?.Invoke(this, new ServerResponseEventArgs(roleDeleteResponse.Status, roleDeleteResponse.Message));
+						break;
+                    case PacketType.RoleUpdate:
+						RoleUpdateServerPacket roleUpdate = JsonConvert.DeserializeObject<RoleUpdateServerPacket>(jsonPacket);
+						RoleUpdated?.Invoke(this, new RoleUpdateEventArgs(roleUpdate.ChatId, roleUpdate.UpdatedRole));
+						break;
+					case PacketType.RoleAssignResponse:
+						RoleAssignResponseServerPacket roleAssignResponse = JsonConvert.DeserializeObject<RoleAssignResponseServerPacket>(jsonPacket);
+						RoleAssignResponse?.Invoke(this, new ServerResponseEventArgs(roleAssignResponse.Status, roleAssignResponse.Message));
+						break;
+					case PacketType.RoleRemove:
+                        RoleRemoveServerPacket roleRemove = JsonConvert.DeserializeObject<RoleRemoveServerPacket>(jsonPacket);
+						RoleRemoved?.Invoke(this, new ChatEventArgs(roleRemove.ChatId));
+						break;
+                    case PacketType.ChatMemberUpdate:
+						ChatMemberUpdateServerPacket memberUpdate = JsonConvert.DeserializeObject<ChatMemberUpdateServerPacket>(jsonPacket);
+						ChatMemberUpdated?.Invoke(this, new ChatMemberUpdateEventArgs(memberUpdate.ChatId, memberUpdate.MemberModel));
+                        break;
+                    case PacketType.ChatRemove:
+                        ChatRemovedServerPacket chatRemovePacket = JsonConvert.DeserializeObject<ChatRemovedServerPacket>(jsonPacket);
+						ChatRemove?.Invoke(this, new ChatEventArgs(chatRemovePacket.ChatId));
+                        break;
+                    case PacketType.ChatEdit:
+						ChatUpdateServerPacket chatEditPacket = JsonConvert.DeserializeObject<ChatUpdateServerPacket>(jsonPacket);
+						ChatEdit?.Invoke(this, new ChatUpdateEventArgs(chatEditPacket.EditedChat));
 						break;
 					default:
 						break;

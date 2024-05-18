@@ -5,13 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+        xmlns:uc="clr-namespace:Client.UserControls"
         mc:Ignorable="d"
         Title="Chat Settings" Height="450" Width="800" Style="{StaticResource MaterialDesignWindow}">
 
-    <Window.DataContext>
-        <viewmodel:ChatSettingsViewModel/>
-    </Window.DataContext>
-    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -23,7 +20,7 @@
         </Grid.RowDefinitions>
         <TextBlock Text="{Binding TargetChat.Name}" FontSize="16" FontWeight="Bold" Grid.Row="0"/>
         <TabControl TabStripPlacement="Left" Grid.Row="1">
-            <TabItem>
+            <TabItem x:Name="generalTabItem">
                 <TabItem.Header>
                     <TextBlock Text="General"/>
                 </TabItem.Header>
@@ -34,16 +31,69 @@
                         <TextBlock Text="Description" FontSize="15" Margin="0 10 0 0"/>
                         <TextBox Text="{Binding TargetChat.Description}"/>
                         <Button Content="Save" Command="{Binding SaveChatCommand}" Margin="0 10 0 0"/>
+                        <Button Content="Delete" Command="{Binding DeleteChatCommand}" Background="#d62d2d" Margin="0 10 0 0"/>
                     </StackPanel>
                 </TabItem.Content>
             </TabItem>
 
-            <TabItem>
+            <TabItem x:Name="rolesTabItem">
                 <TabItem.Header>
                     <TextBlock Text="Roles"/>
                 </TabItem.Header>
                 <TabItem.Content>
-                    
+                    <Grid Margin="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" MinWidth="150"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="Role" FontSize="15" Grid.Column="0" Grid.Row="0"/>
+                        <ListBox Grid.Row="1" ItemsSource="{Binding Roles}" SelectedItem="{Binding SelectedRole}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                        <Button Content="+" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding AddRoleCommand}" Grid.Column="0" Grid.Row="2" Margin="0 -25 0 0"/>
+                        <Grid Grid.Row="1" Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto" MinHeight="35"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="Role Name" Foreground="LightGray" Grid.Column="0" Grid.Row="0" Margin="15 0 0 0"/>
+                            <TextBox Grid.Column="0" Grid.Row="1" VerticalAlignment="Top" Text="{Binding SelectedRole.Name}" Margin="15 0 0 0"/>
+                            <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
+                            <TextBlock Margin="15 0 0 0" Text="Permissions" FontSize="15" Grid.Column="0" Grid.Row="3"/>
+                            <StackPanel Grid.Row="4" Grid.Column="0" Margin="10 10 0 0">
+                                <uc:LabeledToggleButton Label="Can ban" IsChecked="{Binding SelectedRole.CanBan}"/>
+                                <uc:LabeledToggleButton Label="Can mute" IsChecked="{Binding SelectedRole.CanMute}"/>
+                                <uc:LabeledToggleButton Label="Can kick" IsChecked="{Binding SelectedRole.CanKick}"/>
+                                <uc:LabeledToggleButton Label="Can set role" IsChecked="{Binding SelectedRole.CanSetRole}"/>
+                                <uc:LabeledToggleButton Label="Can send message" IsChecked="{Binding SelectedRole.CanSendMessage}"/>
+                            </StackPanel>
+                            <Button Content="Save" Command="{Binding SaveRoleCommand}" Grid.Column="0" Grid.Row="5" Margin="0 10 0 0"/>
+                            <Button Content="Delete" Command="{Binding DeleteRoleCommand}" Background="#d62d2d" Grid.Column="0" Grid.Row="6" Margin="10"/>
+                        </Grid> 
+                    </Grid>
                 </TabItem.Content>
             </TabItem>
         </TabControl>

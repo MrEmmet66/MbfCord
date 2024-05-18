@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,9 +17,11 @@ namespace Infrastructure.S2C.Model
 			Role = role;
 		}
 		public ChatMemberClientModel() { }
+
 		public int Id { get; set; }
 		public string Username { get; set; }
 		public bool Status { get; set; }
+
 		public ChatRoleClientModel Role { get; set; }
 	}
 }

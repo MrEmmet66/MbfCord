@@ -11,6 +11,7 @@ using Infrastructure.C2S.Message;
 using Infrastructure.C2S.Role;
 using Infrastructure.S2C.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,32 +25,23 @@ using System.Xml.Schema;
 
 namespace Client.MVVM.ViewModel
 {
-    class MainViewModel : INotifyPropertyChanged
+    class MainViewModel : BaseViewModel
     {
         ServerConnection serverConnection;
         private Chat selectedChat;
         private Chat selectedUserChat;
         private ChatMemberClientModel selectedMember;
         private ChatRoleClientModel selectedRole;
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        public RelayCommand ConnectToServerCommand { get; set; }
         public RelayCommand SendMessageCommand { get; set; }
-        public RelayCommand CreateChatCommand { get; set; }
         public RelayCommand LeaveChatCommand { get; set; }
         public RelayCommand KickMemberCommand { get; set; }
-        public RelayCommand MuteMemberCommand { get; set; }
-        public RelayCommand BanMemberCommand { get; set; }
-        public RelayCommand AddRoleCommand { get; set; }
-        public RelayCommand EditRoleCommand { get; set; }
         public RelayCommand AssignRoleCommand { get; set; }
         public RelayCommand OpenChatsWindowCommand { get; set; }
         public RelayCommand OpenChatSettingsWindowCommand { get; set; }
         public RelayCommand OpenMemberBanWindowCommand { get; set; }
         public RelayCommand OpenMemberMuteWindowCommand { get; set; }
+        public RelayCommand ChangeUsernameCommand { get; set; }
 
-
-		public RelayCommand RemoveRoleCommand { get; set; }
         public ObservableCollection<Chat> Chats { get; set; }
         public ObservableCollection<Chat> UserChats { get; set; }
         public ObservableCollection<Message> ChatMessages { get; set; }
@@ -60,11 +52,11 @@ namespace Client.MVVM.ViewModel
 
         public string Message { get; set; }
         public string Name { get; set; }
-        public string ChatName { get; set; }
-        public string ChatDesc { get; set; }
         public ClientInfo ClientInfo { get; set; }
-        public DateTime RestrictionDate { get; set; }
-        public ChatRoleClientModel CreatedRole { get; set; }
+        public bool CanLeave
+        {
+            get => ClientMember?.Role.CanKick ?? false;
+		}
 
 
         public ChatMemberClientModel SelectedMember
@@ -76,11 +68,7 @@ namespace Client.MVVM.ViewModel
             set
             {
                 selectedMember = value;
-                if(value != null)
-                {
-					var role = ChatRoles.FirstOrDefault(r => r.Id == value.Role.Id);
-				}
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedMember"));
+                OnPropertyChanged(nameof(SelectedMember));
             }
         }
 		public Chat SelectedChat
@@ -92,37 +80,21 @@ namespace Client.MVVM.ViewModel
 			set
 			{
 				selectedChat = value;
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedChat"));
+                OnPropertyChanged(nameof(SelectedChat));
 				if (value != null)
 				{
                     ChatRoles.Clear();
 					serverConnection.RequestChatMessages(value.Id);
 					serverConnection.RequestChatMembers(value.Id);
-                    RequestRoles(value.Id);
-                    ClientMember = ChatMembers.FirstOrDefault(m => m.Username == ClientInfo.Name);
+                    ClientMember = ChatMembers.FirstOrDefault(m => m.Id == ClientInfo.Id);
 
 				}
 				ChatMessages.Clear();
 			}
 		}
-
-        public ChatRoleClientModel SelectedRole
-        {
-            get
-            {
-                return selectedRole;
-            }
-            set
-            {
-                selectedRole = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("SelectedRole"));
-
-			}
-        }
 		public MainViewModel()
         {
             serverConnection = ServerConnection.GetInstance();
-            CreatedRole = new ChatRoleClientModel();
 
             Chats = new ObservableCollection<Chat>();
             UserChats = new ObservableCollection<Chat>();
@@ -131,17 +103,13 @@ namespace Client.MVVM.ViewModel
 			ChatRoles = new ObservableCollection<ChatRoleClientModel>();
 
 			SendMessageCommand = new RelayCommand(o => SendChatMessage());
-			CreateChatCommand = new RelayCommand(o => RequestChat());
             LeaveChatCommand = new RelayCommand(o => serverConnection.RequestChatLeave((int)o));
             KickMemberCommand = new RelayCommand(o => RequestMemberKick());
-			AddRoleCommand = new RelayCommand(o => RequestAddRole(), o => SelectedChat != null);
-            EditRoleCommand = new RelayCommand(o => RequestEditRole(), o => SelectedRole != null);
-			RemoveRoleCommand = new RelayCommand(o => RequestRemoveRole(), o => SelectedRole != null);
-            AssignRoleCommand = new RelayCommand(o => RequestAssignRole(), o => (SelectedRole != null && SelectedMember != null));
-			OpenChatsWindowCommand = new RelayCommand(o => new ChatsWindow().ShowDialog());
+            OpenChatsWindowCommand = new RelayCommand(o => new ChatsWindow().ShowDialog());
             OpenMemberBanWindowCommand = new RelayCommand(o => OpenBanWindow(), o => SelectedMember != null);
 			OpenMemberMuteWindowCommand = new RelayCommand(o => OpenMuteWindow(), o => SelectedMember != null);
             OpenChatSettingsWindowCommand = new RelayCommand(o => OpenChatSettings());
+            ChangeUsernameCommand = new RelayCommand(o => RequestUsernameEdit(), o => !String.IsNullOrWhiteSpace(ClientInfo?.Name));
 
 			serverConnection.NewChat += OnNewChat;
             serverConnection.MessageReceived += OnMessageReceived;
@@ -150,25 +118,68 @@ namespace Client.MVVM.ViewModel
             serverConnection.ChatMessagesResult += OnChatMessagesResult;
             serverConnection.ChatMembersResult += OnChatMembersResult;
             serverConnection.ChatLeaveResult += OnChatLeaveResult;
-            serverConnection.ChatRolesResult += OnChatRolesResult;
             serverConnection.NewChatMember += OnNewChatMember;
             serverConnection.UsernameResult += (sender, args) => ClientInfo = new ClientInfo(args.Id, args.Username);
             serverConnection.ChatMemberKickResult += OnChatMemberKick;
             serverConnection.ChatMemberRemoved += OnChatMemberRemoved;
 			serverConnection.ChatMemberActionResponse += (sender, args) => MessageBox.Show(args.Message, "Action result", MessageBoxButton.OK, args.Status ? MessageBoxImage.Information : MessageBoxImage.Error);
-            serverConnection.RoleAddResponse += (sender, args) => MessageBox.Show(args.Message, "Role create result", MessageBoxButton.OK, args.Status ? MessageBoxImage.Information : MessageBoxImage.Error);
-			serverConnection.RoleEditResponse += (sender, args) => MessageBox.Show(args.Message, "Role edit result", MessageBoxButton.OK, args.Status ? MessageBoxImage.Information : MessageBoxImage.Error);
-            serverConnection.RoleRemoveResponse += (sender, args) => MessageBox.Show(args.Message, "Role remove result", MessageBoxButton.OK, args.Status ? MessageBoxImage.Information : MessageBoxImage.Error);
+            serverConnection.RoleUpdated += OnRoleUpdate;
+            serverConnection.RoleRemoved += OnRoleRemove;
+            serverConnection.ChatMemberUpdated += OnChatMemberUpdate;
+            serverConnection.ChatRemove += OnChatRemove;
+            serverConnection.ChatEdit += OnChatUpdate;
 
             serverConnection.RequestUserChats();
             RequestUsername();
             
         }
 
+		private void RequestUsernameEdit()
+		{
+            UsernameEditRequestClientPacket usernameEditRequest = new UsernameEditRequestClientPacket(ClientInfo.Name);
+			serverConnection.SendPacket(usernameEditRequest);
+		}
+
+		private void OnChatUpdate(object? sender, ChatUpdateEventArgs e)
+		{
+            int index = UserChats.IndexOf(UserChats.FirstOrDefault(c => c.Id == e.Chat.Id));
+            Application.Current.Dispatcher.Invoke(() => UserChats[index] = new Chat(e.Chat.Name, e.Chat.Description));
+		}
+
+		private void OnChatRemove(object? sender, ChatEventArgs e)
+		{
+            Application.Current.Dispatcher.Invoke(() => UserChats.Remove(UserChats.FirstOrDefault(c => c.Id == e.ChatId)));
+
+		}
+
+		private void OnChatMemberUpdate(object? sender, ChatMemberUpdateEventArgs e)
+		{
+            if(e.ChatId == SelectedChat?.Id)
+            {
+                int index = ChatMembers.IndexOf(ChatMembers.FirstOrDefault(m => m.Id == e.Member.Id));
+                Application.Current.Dispatcher.Invoke(() => ChatMembers[index] = e.Member);
+
+			}
+		}
+
+		private void OnRoleRemove(object? sender, ChatEventArgs e)
+		{
+            if(SelectedChat?.Id == e.ChatId)
+                serverConnection.RequestChatMembers(SelectedChat.Id);
+		}
+
+		private void OnRoleUpdate(object? sender, RoleUpdateEventArgs e)
+        {
+            if(e.ChatId == SelectedChat.Id)
+            {
+                serverConnection.RequestChatMembers(e.ChatId);
+            }
+        }
+
 		private void OpenChatSettings()
 		{
 			ChatSettingsWindow chatSettingsWindow = new ChatSettingsWindow();
-			chatSettingsWindow.DataContext = new ChatSettingsViewModel();
+            chatSettingsWindow.DataContext = new ChatSettingsViewModel(SelectedChat);
 			((ChatSettingsViewModel)chatSettingsWindow.DataContext).TargetChat = SelectedChat;
 			chatSettingsWindow.ShowDialog();
 		}
@@ -194,30 +205,6 @@ namespace Client.MVVM.ViewModel
 			memberBanWindow.ShowDialog();
 		}
 
-		private void RequestAssignRole()
-		{
-			RoleAssignRequestClientPacket roleAssignRequest = new RoleAssignRequestClientPacket(SelectedRole.Id, SelectedMember.Id);
-			serverConnection.SendPacket(roleAssignRequest);
-		}
-
-		private void RequestRemoveRole()
-		{
-			RemoveRoleRequestClientPacket roleRemoveRequest = new RemoveRoleRequestClientPacket(SelectedRole.Id);
-			serverConnection.SendPacket(roleRemoveRequest);
-		}
-
-		private void RequestEditRole()
-		{
-			EditRoleRequestClientPacket roleEditRequest = new EditRoleRequestClientPacket(SelectedRole);
-			serverConnection.SendPacket(roleEditRequest);
-		}
-
-		private void RequestAddRole()
-		{
-			AddRoleRequestClientPacket roleAddRequest = new AddRoleRequestClientPacket(CreatedRole, SelectedChat.Id);
-			serverConnection.SendPacket(roleAddRequest);
-		}
-
 		private void OnChatMemberRemoved(object? sender, ChatMemberRemoveEventArgs e)
 		{
 			Application.Current.Dispatcher.Invoke(() =>
@@ -233,13 +220,6 @@ namespace Client.MVVM.ViewModel
 				}
 			});
 		}
-
-		private void RequestMemberMute()
-		{
-			ChatMemberMuteRequestClientPacket muteRequest = new ChatMemberMuteRequestClientPacket(SelectedChat.Id, SelectedMember.Id, RestrictionDate);
-			serverConnection.SendPacket(muteRequest);
-		}
-
 		private void OnNewChatMember(object? sender, NewMemberEventArgs e)
 		{
             Application.Current.Dispatcher.Invoke(() =>
@@ -271,25 +251,6 @@ namespace Client.MVVM.ViewModel
 			serverConnection.SendPacket(usernameRequest);
 
 		}
-
-
-		private void OnChatRolesResult(object? sender, ChatRolesResultEventArgs e)
-		{
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                foreach(ChatRoleClientModel role in e.Roles)
-                {
-					ChatRoles.Add(role);
-				}
-            });
-		}
-
-		private void RequestRoles(int chatId)
-        {
-            BaseChatRequestClientPacket rolesRequest = new BaseChatRequestClientPacket(PacketType.ChatRolesRequest, chatId);
-            serverConnection.SendPacket(rolesRequest);
-
-        }
 
 		private void OnChatLeaveResult(object? sender, ChatJoinResultEventArgs e)
 		{
@@ -374,15 +335,6 @@ namespace Client.MVVM.ViewModel
         {
             Application.Current.Dispatcher.Invoke(() => Chats.Add(new Chat() { Name = e.Name, Description = e.Description }));
         }
-
-
-
-        private void RequestChat()
-        {
-            ChatCreateClientPacket packet = new ChatCreateClientPacket(ChatName, ChatDesc);
-            serverConnection.SendPacket(packet);
-        }
-
         public void SendChatMessage()
         {
             MessageClientPacket packet = new MessageClientPacket(SelectedChat.Id, Message);

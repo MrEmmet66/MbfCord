@@ -13,7 +13,7 @@ namespace Server.Db
     {
         public ApplicationContext()
         {
-            Database.EnsureCreated(); 
+          Database.EnsureCreated(); 
         }
 
         public DbSet<User> Users { get; set; }
