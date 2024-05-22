@@ -32,6 +32,9 @@ namespace Server.Db
 		{
 			modelBuilder.Entity<User>().HasData(
 				new User { Id = 1, Username = "", HashedPassword = ""});
+			modelBuilder.Entity<User>().HasMany(u => u.MemberRestrictions).WithOne(mr => mr.Member);
+			modelBuilder.Entity<User>().HasMany(u => u.GivedMutes).WithOne(mr => mr.MutedBy);
+			modelBuilder.Entity<User>().HasMany(u => u.GivedBans).WithOne(mr => mr.BannedBy);
 			base.OnModelCreating(modelBuilder);
 		}
 	}

@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Server.Net;
 using Server.Db;
 using Microsoft.EntityFrameworkCore;
-using Server.Chat;
 using System.Net.Sockets;
 using Server.Services;
 

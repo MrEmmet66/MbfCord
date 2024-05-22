@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S.Chat;
+﻿using Infrastructure.C2S;
+using Infrastructure.C2S.Chat;
 using Infrastructure.S2C.Chat;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
@@ -14,46 +15,52 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Chat
 {
-	internal class ChatRemovePacketHandler : IPacketHandler<BaseChatRequestClientPacket>
+	internal class ChatRemovePacketHandler : BasePacketHandler
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly ChatService chatService;
 		private readonly IUserRepository userRepository;
 		private readonly UserService userService;
-		public ClientObject Sender { get; set; }
-		public ChatRemovePacketHandler(ClientObject sender)
+		private readonly RoleRepository roleRepository;
+
+		public ChatRemovePacketHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			chatService = Program.ServiceProvider.GetRequiredService<ChatService>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
+			roleRepository = Program.ServiceProvider.GetRequiredService<RoleRepository>();
 
 		}
 
-		public void HandlePacket(BaseChatRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
-		{
+			if (!(clientPacket is BaseChatRequestClientPacket packet && clientPacket.Type == Infrastructure.PacketType.ChatRemoveRequest))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
 			if (chat == null)
 			{
-				Sender.SendPacket(new ChatRemoveResponseServerPacket(false, "Chat not found"));
+				sender.SendPacket(new ChatRemoveResponseServerPacket(false, "Chat not found"));
 				return;
 			}
-			User user = await userRepository.GetByIdWithIncludesAsync(Sender.User.Id);
+			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
 			Role userRole = userService.GetUserRole(user, chat);
 			if (!userRole.IsOwner)
 			{
-				Sender.SendPacket(new ChatRemoveResponseServerPacket(false, "You don't have permission to remove this chat"));
+				sender.SendPacket(new ChatRemoveResponseServerPacket(false, "You don't have permission to remove this chat"));
 				return;
+			}
+			foreach(Role role in chat.Roles)
+			{
+				roleRepository.Remove(role.Id);
 			}
 			chatRepository.Remove(chat.Id);
 			await chatRepository.SaveAsync();
-			Sender.SendPacket(new ChatRemoveResponseServerPacket(true, "Chat removed successfully"));
+			sender.SendPacket(new ChatRemoveResponseServerPacket(true, "Chat removed successfully"));
 			ChatRemovedServerPacket chatRemovedPacket = new ChatRemovedServerPacket(chat.Id);
 			chatService.SendPacketToClientsInChat(chat, chatRemovedPacket);
 		}

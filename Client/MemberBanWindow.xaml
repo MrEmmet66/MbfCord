@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client"
         xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
+                xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="MemberBanWindow" Height="200" Width="200" Style="{StaticResource MaterialDesignWindow}">
 
@@ -16,6 +17,7 @@
             <TextBlock Text="?" DockPanel.Dock="Top"/>
         </DockPanel>
         <DatePicker Margin="5" SelectedDate="{Binding RestrictionDate}" x:Name="banDatePicker"/>
+        <TextBox Text="{Binding Reason}" materialDesign:HintAssist.Hint="Reason" Margin="5"/>
         <Button Margin="5" Background="#d62d2d" Content="Ban" Command="{Binding RestrictCommand}"/>
     </StackPanel>
 </Window>

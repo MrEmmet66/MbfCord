@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Chat;
 using Infrastructure.C2S.Message;
 using Infrastructure.S2C.Chat;
@@ -16,27 +17,26 @@ using System.Text;
 
 namespace Server.Handler.Chat.ChatMessageRequest
 {
-    internal class ChatMessageRequestHandler : IPacketHandler<BaseChatRequestClientPacket>
+    internal class ChatMessageRequestHandler : BasePacketHandler
     {
         private readonly ChatRepository chatRepository;
         private readonly MessageRepository messageRepository;
-		public ClientObject Sender { get; set; }
-
-		public ChatMessageRequestHandler(ClientObject sender)
+		public ChatMessageRequestHandler(ClientObject sender) : base(sender)
         {
-            Sender = sender;
             chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			messageRepository = Program.ServiceProvider.GetRequiredService<MessageRepository>();
 		}
 
-		public void HandlePacket(BaseChatRequestClientPacket packet)
+        public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
         {
-            throw new NotImplementedException();
-        }
+			if (!(clientPacket is BaseChatRequestClientPacket packet && clientPacket.Type == PacketType.ChatMessagesRequest))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 
-        public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
-        {
-            Console.WriteLine(packet.ChatId);
+			Console.WriteLine(packet.ChatId);
             Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
             List<ChatMessageClientModel> chatMessages = new List<ChatMessageClientModel>();
             foreach (var msg in chat.Messages)
@@ -51,7 +51,7 @@ namespace Server.Handler.Chat.ChatMessageRequest
             }
 
             string json = new ChatMessagesResultServerPacket(chatMessages).Serialize();
-            Sender.SendPacket(PacketType.ChatMessagesResult, json);
+            sender.SendPacket(PacketType.ChatMessagesResult, json);
         }
     }
 }

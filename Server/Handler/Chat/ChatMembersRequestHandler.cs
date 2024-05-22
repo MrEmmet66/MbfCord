@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Chat;
 using Infrastructure.S2C.Chat;
 using Infrastructure.S2C.Model;
@@ -17,34 +18,33 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Chat
 {
-	internal class ChatMembersRequestHandler : IPacketHandler<BaseChatRequestClientPacket>
+	internal class ChatMembersRequestHandler : BasePacketHandler
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly IUserRepository userRepository;
 		private readonly UserService userService;
-		public ClientObject Sender { get; set; }
 
-		public ChatMembersRequestHandler(ClientObject sender)
+		public ChatMembersRequestHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 		}
 
-		public void HandlePacket(BaseChatRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
-		{
+			if (!(clientPacket is BaseChatRequestClientPacket packet && clientPacket.Type == PacketType.ChatMembersRequest))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			List<ChatMemberClientModel> chatMembers = new List<ChatMemberClientModel>();
 			foreach (var member in chat.Members)
 			{
 				Role role = GetRoleInChat(chat, member.Id);
-				chatMembers.Add(new ChatMemberClientModel(member.Id, member.Username, true, new ChatRoleClientModel
+				chatMembers.Add(new ChatMemberClientModel(member.Id, member.Username, new ChatRoleClientModel
 				{
 					Id = role.Id,
 					Name = role.Name,
@@ -57,7 +57,7 @@ namespace Server.Handler.Chat
 				}));
 			}
 			ChatMembersResultServerPacket membersPacket = new ChatMembersResultServerPacket(chatMembers);
-			Sender.SendPacket(PacketType.ChatMembersResult, membersPacket.Serialize());
+			sender.SendPacket(PacketType.ChatMembersResult, membersPacket.Serialize());
 		}
 
 		private Role GetRoleInChat(Channel chat, int userId)

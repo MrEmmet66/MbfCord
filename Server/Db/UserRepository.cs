@@ -92,16 +92,6 @@ namespace Server.Db
             return _context.SaveChangesAsync();
         }
 
-        public User Select(Expression<Func<User, bool>> predicate)
-        {
-            return _context.Users.FirstOrDefault(predicate);
-        }
-
-        public Task<User> SelectAsync(Expression<Func<User, bool>> predicate)
-        {
-            return _context.Users.FirstOrDefaultAsync(predicate);
-        }
-
         public User Update(in User sender)
         {
             return _context.Users.Update(sender).Entity;

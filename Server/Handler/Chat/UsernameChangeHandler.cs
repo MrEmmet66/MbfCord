@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S.MemberAction;
+﻿using Infrastructure.C2S;
+using Infrastructure.C2S.MemberAction;
 using Infrastructure.S2C;
 using Infrastructure.S2C.Model;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,42 +16,41 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Chat
 {
-	internal class UsernameChangeHandler : IPacketHandler<UsernameEditRequestClientPacket>
+	internal class UsernameChangeHandler : BasePacketHandler
 	{
 		private readonly UserService userService;
 		private readonly IUserRepository userRepository;
 		private readonly ChatService chatService;
-		public ClientObject Sender { get; set; }
-		public UsernameChangeHandler(ClientObject sender)
+		public UsernameChangeHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 			chatService = Program.ServiceProvider.GetRequiredService<ChatService>();
 		}
 
-		public void HandlePacket(UsernameEditRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(UsernameEditRequestClientPacket packet)
-		{
-			User user = await userRepository.GetByIdWithIncludesAsync(Sender.User.Id);
+			if (!(clientPacket is UsernameEditRequestClientPacket packet))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
+			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
 			if (user == null)
 			{
 				Console.WriteLine("User not found");
 				return;
 			}
-			foreach(Channel chat in user.Channels)
+			user.Username = packet.NewUsername;
+			userRepository.Update(user);
+			await userRepository.SaveAsync();
+			foreach (Channel chat in user.Channels)
 			{
 				Role role = userService.GetUserRole(user, chat);
 				ChatRoleClientModel userRoleModel = new ChatRoleClientModel(role.Id, role.Name, role.CanSendMessage, role.CanKick, role.CanSetRole, role.CanBan, role.CanMute);
-				ChatMemberClientModel userModel = new ChatMemberClientModel(user.Id, user.Username, true, userRoleModel);
+				ChatMemberClientModel userModel = new ChatMemberClientModel(user.Id, user.Username, userRoleModel);
 				ChatMemberUpdateServerPacket chatMemberUpdatedPacket = new ChatMemberUpdateServerPacket(userModel, chat.Id);
-				user.Username = packet.NewUsername;
-				userRepository.Update(user);
-				await userRepository.SaveAsync();
 				chatService.SendPacketToClientsInChat(chat, chatMemberUpdatedPacket);
 
 

@@ -15,10 +15,8 @@ namespace Client.MVVM.Model
         {
             Id = model.Id;
             Username = model.Username;
-            Status = model.Status;
         }
         public int Id { get; set; }
         public string Username { get; set; }
-        public bool Status { get; set; }
     }
 }

@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Net\IO\ServerConnection.events.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Net\ServerConnection.events.cs" />
   </ItemGroup>
 
@@ -26,8 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Net\IO\Packet\Auth\" />
-    <Folder Include="Net\IO\Packet\Chat\" />
+    <Folder Include="Util\" />
   </ItemGroup>
 
 </Project>

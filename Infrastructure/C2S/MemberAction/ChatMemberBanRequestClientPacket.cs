@@ -9,9 +9,11 @@ namespace Infrastructure.C2S.MemberAction
 	public class ChatMemberBanRequestClientPacket : BaseChatMemberActionClientPacket
 	{
 		public DateTime BanTime { get; set; }
-		public ChatMemberBanRequestClientPacket(int chatId, int userId, DateTime banTime) : base(PacketType.ChatMemberBanRequest, chatId, userId)
+		public string Reason { get; set; }
+		public ChatMemberBanRequestClientPacket(int chatId, int userId, DateTime banTime, string reason) : base(PacketType.ChatMemberBanRequest, chatId, userId)
 		{
 			BanTime = banTime;
+			Reason = reason;
 		}
 	}
 }

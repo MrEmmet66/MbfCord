@@ -9,7 +9,14 @@ namespace Client.Net.Event
 {
     internal class MessageEventArgs : EventArgs
     {
-        public Message Message { get; set; }
+		public MessageEventArgs() { }
+        public MessageEventArgs(Message message, bool status, string errorMessage)
+		{
+			Message = message;
+			Status = status;
+			ErrorMessage = errorMessage;
+		}
+		public Message Message { get; set; }
         public bool Status { get; set; }
         public string ErrorMessage { get; set; }
     }

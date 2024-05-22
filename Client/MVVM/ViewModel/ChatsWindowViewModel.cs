@@ -14,11 +14,13 @@ using System.Threading.Tasks;
 using Client.Net.Event;
 using System.Windows;
 using Infrastructure.C2S.Chat;
+using Infrastructure.S2C.Model;
 
 namespace Client.MVVM.ViewModel
 {
-    class ChatsWindowViewModel : INotifyPropertyChanged
-    {
+    class ChatsWindowViewModel : BaseViewModel
+
+	{
         public ChatsWindowViewModel()
         {
             serverConnection = ServerConnection.GetInstance();
@@ -29,15 +31,13 @@ namespace Client.MVVM.ViewModel
 
 			serverConnection.ChatsResult += OnChatsResult;
 			serverConnection.ChatJoinResult += OnChatJoinResult;
+			serverConnection.NewChat += OnNewChat;
 
 			RequestChats();
 		}
-
-
 		private ServerConnection serverConnection;
         private Chat selectedChat;
 
-		public event PropertyChangedEventHandler? PropertyChanged;
 
 		public ObservableCollection<Chat> Chats { get; set; }
 		public RelayCommand JoinChatCommand { get; set; }
@@ -50,10 +50,23 @@ namespace Client.MVVM.ViewModel
 			set
 			{
 				selectedChat = value;
-				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedChat)));
+				OnPropertyChanged(nameof(SelectedChat));
 
 			}
 		}
+
+
+		private void OnNewChat(object? sender, NewChatEventArgs e)
+		{
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				Chat chat = new Chat(e.Name, e.Description);
+				chat.Id = e.ChatId;
+				
+				Chats.Add(chat);
+			});
+		}
+
 
 		private void OnChatJoinResult(object? sender, ChatJoinResultEventArgs e)
 		{

@@ -7,15 +7,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Client.MVVM.ViewModel
 {
-    class MemberBanWindowViewModel : IMemberRestrictionViewModel
+    class MemberBanWindowViewModel : BaseViewModel, IMemberRestrictionViewModel
     {
 		private ServerConnection serverConnection = ServerConnection.GetInstance();
 		public int ChatId { get; set; }
         public ChatMemberClientModel TargetMember { get; set; }
         public DateTime RestrictionDate { get; set; }
+		public string Reason { get; set; }
 
         public RelayCommand RestrictCommand { get; set; }
 
@@ -30,8 +32,18 @@ namespace Client.MVVM.ViewModel
 
 		private void RequestMemberBan()
 		{
-			ChatMemberBanRequestClientPacket banRequest = new ChatMemberBanRequestClientPacket(ChatId, TargetMember.Id, RestrictionDate);
+			ChatMemberBanRequestClientPacket banRequest = new ChatMemberBanRequestClientPacket(ChatId, TargetMember.Id, RestrictionDate, Reason);
 			serverConnection.SendPacket(banRequest);
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				foreach (Window window in Application.Current.Windows)
+				{
+					if (window is MemberBanWindow)
+					{
+						window.Close();
+					}
+				}
+			});
 		}
 	}
 }

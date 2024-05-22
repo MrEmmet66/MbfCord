@@ -29,6 +29,9 @@ namespace Server.Chat
         [JsonIgnore]
         public List<MemberRestriction>? MemberRestrictions { get; set; }
 
+        public List<MemberRestriction>? GivedMutes { get; set; }
+		public List<MemberRestriction>? GivedBans { get; set; }
+
 
 	}
 }

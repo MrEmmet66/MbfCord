@@ -7,6 +7,7 @@ using Infrastructure.C2S.Chat;
 using Infrastructure.S2C;
 using Infrastructure.S2C.Auth;
 using Infrastructure.S2C.Chat;
+using Infrastructure.S2C.Chat.Results;
 using Infrastructure.S2C.MemberAction;
 using Infrastructure.S2C.Message;
 using Infrastructure.S2C.Model;
@@ -55,9 +56,33 @@ namespace Client.Net
         {
             if (!client.Connected)
             {
-                client.Connect("127.0.0.1", 6666);
-                Writer = new BinaryWriter(client.GetStream());
-                Reader = new BinaryReader(client.GetStream());
+                try
+                {
+                    string ip;
+                    FileInfo fileInfo = new FileInfo("config.txt");
+                    if (!fileInfo.Exists)
+                    {
+                        using (StreamWriter reader = new StreamWriter(fileInfo.FullName))
+                        {
+                            ip = "127.0.0.1";
+                            reader.WriteLine(ip);
+                        }
+                    }
+                    else
+                    {
+                        using (StreamReader reader = new StreamReader(fileInfo.FullName))
+                        {
+                            ip = reader.ReadLine();
+                        }
+                    }
+                    client.Connect(ip, 6666);
+                    Writer = new BinaryWriter(client.GetStream());
+                    Reader = new BinaryReader(client.GetStream());
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
                 Task.Run(() => ReadPackets());
             }
         }
@@ -68,12 +93,6 @@ namespace Client.Net
             AuthClientPacket packet = new AuthClientPacket(PacketType.LoginRequest, username, password);
             SendPacket(packet);
             
-        }
-
-        public void SendRegisterPacket(string username, string password)
-        {
-            AuthClientPacket packet = new AuthClientPacket(PacketType.RegisterRequest, username, password);
-            SendPacket(packet);
         }
 
         public void SendPacket<T>(T packet) where T : BaseClientPacket
@@ -115,18 +134,15 @@ namespace Client.Net
             {
                 PacketType packetType = (PacketType)Reader.ReadByte();
                 string jsonPacket = Reader.ReadString();
-                switch (packetType)
+
+				switch (packetType)
                 {
-                    case PacketType.ActionDenied:
-                        string errorMessage = Reader.ReadString();
-                        MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        break;
                     case PacketType.LoginResult:
                         AuthResponseServerPacket loginResultPacket = JsonConvert.DeserializeObject<AuthResponseServerPacket>(jsonPacket);
                         AuthEventArgs authEventArgs = new AuthEventArgs() { Status = loginResultPacket.Status, Message = loginResultPacket.Message };
                         LoginResult?.Invoke(this, authEventArgs);
                         break;
-                    case PacketType.RegisterResult:     
+                    case PacketType.RegisterResult:
                         AuthResponseServerPacket registerResultPacket = JsonConvert.DeserializeObject<AuthResponseServerPacket>(jsonPacket);
                         AuthEventArgs registerEventArgs = new AuthEventArgs() { Status = registerResultPacket.Status, Message = registerResultPacket.Message };
                         RegisterResult?.Invoke(this, registerEventArgs);
@@ -223,10 +239,18 @@ namespace Client.Net
                         ChatRemovedServerPacket chatRemovePacket = JsonConvert.DeserializeObject<ChatRemovedServerPacket>(jsonPacket);
 						ChatRemove?.Invoke(this, new ChatEventArgs(chatRemovePacket.ChatId));
                         break;
+                    case PacketType.ChatRemoveResponse:
+						ChatRemoveResponseServerPacket chatRemoveResponse = JsonConvert.DeserializeObject<ChatRemoveResponseServerPacket>(jsonPacket);
+                        ChatRemoveResponse?.Invoke(this, new ServerResponseEventArgs(chatRemoveResponse.Status, chatRemoveResponse.Message));
+                        break;
                     case PacketType.ChatEdit:
 						ChatUpdateServerPacket chatEditPacket = JsonConvert.DeserializeObject<ChatUpdateServerPacket>(jsonPacket);
 						ChatEdit?.Invoke(this, new ChatUpdateEventArgs(chatEditPacket.EditedChat));
 						break;
+                    case PacketType.BannedChatMembersResponse:
+                        ChatBansResultServerPacket chatBansPacket = JsonConvert.DeserializeObject<ChatBansResultServerPacket>(jsonPacket);
+						ChatBansResult?.Invoke(this, new ChatBansEventArgs(chatBansPacket.BannedMembers));
+                        break;
 					default:
 						break;
 

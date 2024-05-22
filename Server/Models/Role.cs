@@ -34,6 +34,7 @@ namespace Server.Chat
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public Channel Chat { get; set; }
+		public List<User>? Users { get; set; }
 		public bool CanSendMessage { get; set; }
 		public bool CanKick { get; set; }
 		public bool CanSetRole { get; set; }

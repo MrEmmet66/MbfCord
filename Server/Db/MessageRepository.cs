@@ -10,14 +10,38 @@ using System.Threading.Tasks;
 
 namespace Server.Db
 {
-    internal class MessageRepository : IRepository<Message>
+    interface IMessageRepository
+	{
+		public Message Add(Message sender);
+
+		public IQueryable<Message> GetAll();
+
+		public Task<IQueryable<Message>> GetAllAsync();
+
+		public Message GetById(int id);
+
+		public Task<Message> GetByIdAsync(int id);
+
+		public Message GetByIdWithIncludes(int id);
+
+		public Task<Message> GetByIdWithIncludesAsync(int id);
+
+		public bool Remove(int id);
+
+		public int Save();
+
+		public Task<int> SaveAsync();
+
+		public Message Update(Message sender);
+	}
+	internal class MessageRepository : IMessageRepository
     {
         private readonly ApplicationContext context;
         public MessageRepository(ApplicationContext context)
         {
             this.context = context;
         }
-        public Message Add(in Message sender)
+        public Message Add(Message sender)
         {
             return context.Messages.Add(sender).Entity;
         }
@@ -67,17 +91,7 @@ namespace Server.Db
             return context.SaveChangesAsync();
         }
 
-        public Message Select(Expression<Func<Message, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Message> SelectAsync(Expression<Func<Message, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Message Update(in Message sender)
+        public Message Update(Message sender)
         {
             return context.Messages.Update(sender).Entity;
         }

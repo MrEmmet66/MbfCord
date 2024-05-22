@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Client.MemberActionWindows"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Mute member" Height="200" Width="200" Style="{StaticResource MaterialDesignWindow}">
 
@@ -15,6 +16,7 @@
             <TextBlock Text="?" DockPanel.Dock="Top"/>
         </DockPanel>
         <DatePicker Margin="5" SelectedDate="{Binding RestrictionDate}" x:Name="muteDatePicker"/>
+        <TextBox Text="{Binding Reason}" Margin="5" materialDesign:HintAssist.Hint="Reason"/>
         <Button Margin="5" Background="#d62d2d" Content="Mute" Command="{Binding RestrictCommand}"/>
     </StackPanel>
 </Window>

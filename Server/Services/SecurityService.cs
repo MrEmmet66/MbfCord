@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Server.Events
+namespace Server.Services
 {
-    public class UserPermissionChangeEventArgs : EventArgs
-    {
-    }
+	internal class SecurityService
+	{
+	}
 }

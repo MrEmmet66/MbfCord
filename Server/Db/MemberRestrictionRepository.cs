@@ -10,7 +10,30 @@ using System.Threading.Tasks;
 
 namespace Server.Db
 {
-	internal class MemberRestrictionRepository : IRepository<MemberRestriction>
+	interface IMemberRestrictionRepository
+	{
+		public MemberRestriction Add(MemberRestriction sender);
+
+		public IQueryable<MemberRestriction> GetAll();
+
+		public  Task<IQueryable<MemberRestriction>> GetAllAsync();
+
+		public MemberRestriction GetById(int id);
+
+		public  Task<MemberRestriction> GetByIdAsync(int id);
+
+		public MemberRestriction GetByIdWithIncludes(int id);
+
+
+		public bool Remove(int id);
+
+		public int Save();
+
+		public Task<int> SaveAsync();
+
+		public MemberRestriction Update(in MemberRestriction sender);
+	}
+	internal class MemberRestrictionRepository : IMemberRestrictionRepository
 	{
 		private readonly ApplicationContext context;
 		public MemberRestrictionRepository(ApplicationContext context)
@@ -18,7 +41,7 @@ namespace Server.Db
 			this.context = context;
 		}
 
-		public MemberRestriction Add(in MemberRestriction sender)
+		public MemberRestriction Add(MemberRestriction sender)
 		{
 			return context.MemberRestrictions.Add(sender).Entity;
 		}
@@ -30,7 +53,7 @@ namespace Server.Db
 
 		public async Task<IQueryable<MemberRestriction>> GetAllAsync()
 		{
-			return await context.MemberRestrictions.ToListAsync().ContinueWith(task => task.Result.AsQueryable());
+			return await context.MemberRestrictions.Include(m => m.Member).ToListAsync().ContinueWith(task => task.Result.AsQueryable());
 		}
 
 		public MemberRestriction GetById(int id)

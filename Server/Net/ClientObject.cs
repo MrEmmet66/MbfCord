@@ -48,13 +48,6 @@ namespace Server.Net
 			Writer.Flush();
 		}
 
-		public void SendActionDenied(string message)
-        {
-            Writer.Write((byte)PacketType.ActionDenied);
-            Writer.Flush();
-            Writer.Write(message);
-        }
-
         public void Disconnect()
         {
             ClientSocket.Close();

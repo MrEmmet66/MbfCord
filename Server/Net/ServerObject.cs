@@ -15,7 +15,6 @@ namespace Server.Net
         private TcpListener tcpListener;
         public List<ClientObject> Clients { get; set; }
 
-        public event Action UserConnected;
 
         private ServerObject()
         {

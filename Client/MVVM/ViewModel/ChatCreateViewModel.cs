@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Client.MVVM.ViewModel
 {
-	internal class ChatCreateViewModel
+	internal class ChatCreateViewModel : BaseViewModel
 	{
 		private ServerConnection serverConnection;
 		public RelayCommand CreateChatCommand { get; set; }
@@ -26,6 +27,16 @@ namespace Client.MVVM.ViewModel
 		{
 			ChatCreateClientPacket chatCreateClientPacket = new ChatCreateClientPacket(ChatName, ChatDescription);
 			serverConnection.SendPacket(chatCreateClientPacket);
+			Application.Current.Dispatcher.Invoke(() =>
+			{
+				foreach (Window window in Application.Current.Windows)
+				{
+					if (window is ChatCreateWindow)
+					{
+						window.Close();
+					}
+				}
+			});
 		}
 	}
 }

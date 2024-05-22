@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.MemberAction;
 using Infrastructure.S2C.Chat;
 using Infrastructure.S2C.MemberAction;
@@ -19,58 +20,57 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Chat.MemberAction
 {
-	internal class ChatMemberKickRequestHandler : IPacketHandler<ChatMemberKickRequestClientPacket>
+	internal class ChatMemberKickRequestHandler : BasePacketHandler
 	{
 		private readonly IUserRepository userRepository;
 		private readonly ChatRepository chatRepository;
 		private readonly UserService userService;
 		private readonly MessageService messageService;
 
-		public ChatMemberKickRequestHandler(ClientObject sender)
+		public ChatMemberKickRequestHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
 		}
-		public ClientObject Sender { get; set; }
 
-		public void HandlePacket(ChatMemberKickRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(ChatMemberKickRequestClientPacket packet)
-		{
-			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
-			User user = await userRepository.GetByIdAsync(Sender.User.Id);
+			if (!(clientPacket is ChatMemberKickRequestClientPacket packet))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
+			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
+			User user = await userRepository.GetByIdAsync(sender.User.Id);
 			Role role = GetUserRole(user, chat);
 			if (role.CanKick || role.IsOwner)
 			{
-				User targetUser = await userRepository.GetByIdWithIncludesAsync(packet.UserId);
+				User targetUser = await userRepository.GetByIdAsync(packet.UserId);
 				Role targetRole = GetUserRole(targetUser, chat);
 				if (targetRole != null)
 				{
 					if (targetRole.IsOwner)
 					{
-						Sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "You can't kick the owner"));
+						sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "You can't kick the owner"));
 						return;
 					}
 					await userService.KickUserAsync(chat, targetUser);
 					messageService.AddSystemMessage($"{targetUser.Username} was kicked by {user.Username}", chat);
 
-					Sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, targetUser.Id, true, "User kicked"));
+					sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, targetUser.Id, true, "User kicked"));
 
 				}
 				else
 				{
-					Sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "User not found"));
+					sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "User not found"));
 				}
 			}
 			else
 			{
-				Sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "You don't have permission to kick"));
+				sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "You don't have permission to kick"));
 			}
 		}
 		private Role GetUserRole(User user, Channel chat)

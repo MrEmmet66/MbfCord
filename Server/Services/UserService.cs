@@ -44,6 +44,7 @@ namespace Server.Services
 		{
 			Role userRole = user.Roles.FirstOrDefault(r => r.Chat.Id == role.Chat.Id);
 			user.Roles[user.Roles.IndexOf(userRole)] = role;
+			userRepository.Update(user);
 			roleRepository.Save();
 		}
 

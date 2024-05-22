@@ -10,7 +10,24 @@ using System.Threading.Tasks;
 
 namespace Server.Db
 {
-	internal class RoleRepository : IRepository<Role>
+	interface IRoleRepository
+	{
+		 Role Add(Role sender);
+
+		 IQueryable<Role> GetAll();
+
+		Task<IQueryable<Role>> GetAllAsync();
+
+		Role Update(Role sender);
+
+		Role GetById(int id);
+		Role GetByName(string name);
+
+		int Save();
+
+		Task<int> SaveAsync();
+	}
+	internal class RoleRepository : IRoleRepository
 	{
 		private readonly ApplicationContext context;
 		public RoleRepository(ApplicationContext context)
@@ -18,7 +35,7 @@ namespace Server.Db
 			this.context = context;
 		}
 
-		public Role Add(in Role sender)
+		public Role Add(Role sender)
 		{
 			return context.Roles.Add(sender).Entity;
 		}
@@ -43,14 +60,9 @@ namespace Server.Db
 			return await context.Roles.FindAsync(id);
 		}
 
-		public Role GetByIdWithIncludes(int id)
+		public Role GetByName(string name)
 		{
-			throw new NotImplementedException();
-		}
-
-		public Task<Role> GetByIdWithIncludesAsync(int id)
-		{
-			throw new NotImplementedException();
+			return context.Roles.FirstOrDefault(role => role.Name == name);
 		}
 
 		public bool Remove(int id)
@@ -68,17 +80,7 @@ namespace Server.Db
 			return await context.SaveChangesAsync();
 		}
 
-		public Role Select(Expression<Func<Role, bool>> predicate)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Task<Role> SelectAsync(Expression<Func<Role, bool>> predicate)
-		{
-			throw new NotImplementedException();
-		}
-
-		public Role Update(in Role sender)
+		public Role Update(Role sender)
 		{
 			return context.Roles.Update(sender).Entity;
 		}

@@ -12,34 +12,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Infrastructure.C2S;
 
 namespace Server.Handler.Auth
 {
-    internal class AuthPacketHandler : IPacketHandler<AuthClientPacket>
+    internal class AuthPacketHandler : BasePacketHandler
     {
         private readonly IUserRepository userRepository;
-		public ClientObject Sender { get; set; }
-        public AuthPacketHandler()
+		public AuthPacketHandler(ClientObject sender) : base(sender)
         {
-            userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
-		}
-		public AuthPacketHandler(ClientObject sender)
-        {
-            Sender = sender;
             using (var scope = Program.ServiceProvider.CreateScope())
             {
                 userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
             }
         }
 
-		public void HandlePacket(AuthClientPacket packet)
-        {
-			throw new NotImplementedException();
-        }
 
-        public async Task HandlePacketAsync(AuthClientPacket packet)
+        public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
         {
+			if (!(clientPacket is AuthClientPacket packet))
+			{
+				if(nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			string username = packet.Username;
 			string password = packet.Password;
             User user = await userRepository.GetByUsernameAsync(username);
@@ -50,7 +46,7 @@ namespace Server.Handler.Auth
 					{
 						AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.LoginResult, false, "No user for this request");
 						string json = authResponse.Serialize();
-						Sender.SendPacket(PacketType.LoginResult, json);
+						sender.SendPacket(PacketType.LoginResult, json);
 						Console.WriteLine("No user for this request");
 
 					}
@@ -61,15 +57,15 @@ namespace Server.Handler.Auth
 							Console.WriteLine("Wrong password");
 							AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.LoginResult, false, "Wrong password");
 							string json = authResponse.Serialize();
-							Sender.SendPacket(PacketType.LoginResult, json);
+							sender.SendPacket(PacketType.LoginResult, json);
 						}
 						else
 						{
 							Console.WriteLine("Login success");
-							ServerObject.Instance.Clients.Find(c => c == Sender).User = user;
+							ServerObject.Instance.Clients.Find(c => c == sender).User = user;
 							AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.LoginResult, true, "Login success");
 							string json = authResponse.Serialize();
-							Sender.SendPacket(PacketType.LoginResult, json);
+							sender.SendPacket(PacketType.LoginResult, json);
 						}
 					}
 					break;
@@ -80,7 +76,7 @@ namespace Server.Handler.Auth
 						Console.WriteLine("User already exists");
 						AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.RegisterResult, false, "User already exists");
 						string json = JsonConvert.SerializeObject(authResponse);
-						Sender.SendPacket(PacketType.RegisterResult, json);
+						sender.SendPacket(PacketType.RegisterResult, json);
 					}
 					else
 					{
@@ -89,7 +85,7 @@ namespace Server.Handler.Auth
 						Console.WriteLine("User registered succesfully");
 						AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.RegisterResult, true, "User registered succesfully");
 						string json = JsonConvert.SerializeObject(authResponse);
-						Sender.SendPacket(PacketType.RegisterResult, json);
+						sender.SendPacket(PacketType.RegisterResult, json);
 
 					}
 					break;

@@ -11,35 +11,34 @@ using Server.Net;
 
 namespace Server.Handler.Chat
 {
-    internal class UserChatRequestPacketHandler : IPacketHandler<BaseClientPacket>
+    internal class UserChatRequestPacketHandler : BasePacketHandler
     {
         private readonly ChatRepository chatRepository;
-		public ClientObject Sender { get; set; }
-		public UserChatRequestPacketHandler(ClientObject sender)
+		public UserChatRequestPacketHandler(ClientObject sender) : base(sender)
         {
-            Sender = sender;
             chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
         }
 
-		public void HandlePacket(BaseClientPacket packet)
+        public override async Task HandlePacketAsync(BaseClientPacket packet)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task HandlePacketAsync(BaseClientPacket packet)
-        {
+			if (packet.Type != PacketType.UserChatsRequest)
+            {
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(packet);
+				return;
+			}
             IQueryable<Channel> channels = await chatRepository.GetAllAsync();
             List<Channel> userChannels = new List<Channel>();
             foreach (var channel in channels)
             {
-                if (chatRepository.GetByIdWithIncludes(channel.Id).Members.Contains(Sender.User))
+                if (chatRepository.GetByIdWithIncludes(channel.Id).Members.Contains(sender.User))
                 {
                     userChannels.Add(channel);
                 }
             }
             string channelsJson = JsonConvert.SerializeObject(userChannels);
             UserChatsResultServerPacket userChatsResult = new UserChatsResultServerPacket(channelsJson);
-            Sender.SendPacket(PacketType.UserChatsResult, userChatsResult.Serialize());
+            sender.SendPacket(PacketType.UserChatsResult, userChatsResult.Serialize());
             Console.WriteLine("user chat otbayraktaren");
         }
     }

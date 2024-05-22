@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Chat;
 using Infrastructure.S2C.Model;
 using Infrastructure.S2C.Roles;
@@ -15,23 +16,23 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Roles
 {
-	internal class ChatRolesRequestHandler : IPacketHandler<BaseChatRequestClientPacket>
+	internal class ChatRolesRequestHandler : BasePacketHandler
 	{
 		private readonly RoleRepository roleRepository;
-		public ChatRolesRequestHandler(ClientObject sender)
+		public ChatRolesRequestHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			roleRepository = Program.ServiceProvider.GetRequiredService<RoleRepository>();
 		}
-		public ClientObject Sender { get; set; }
 
-		public void HandlePacket(BaseChatRequestClientPacket packet)
-		{
-			throw new NotImplementedException();
-		}
 
-		public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
+			if (!(clientPacket.Type == PacketType.ChatRolesRequest && clientPacket is BaseChatRequestClientPacket packet))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			List<Role> roles = await GetRolesInChat(packet.ChatId);
 			var rolesModel = roles.Where(r => r.Chat.Id == packet.ChatId).Select(r => new ChatRoleClientModel
 			{
@@ -45,7 +46,7 @@ namespace Server.Handler.Roles
 				IsOwner = r.IsOwner
 			}).ToList();
 			ChatRolesResponseServerPacket response = new ChatRolesResponseServerPacket(rolesModel);
-			Sender.SendPacket(response);
+			sender.SendPacket(response);
 		}
 
 		private async Task<List<Role>> GetRolesInChat(int chatId)

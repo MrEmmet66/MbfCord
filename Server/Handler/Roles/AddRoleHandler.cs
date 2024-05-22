@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S.Role;
+﻿using Infrastructure.C2S;
+using Infrastructure.C2S.Role;
 using Infrastructure.S2C.Model;
 using Infrastructure.S2C.Roles;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,38 +11,37 @@ using Server.Services;
 
 namespace Server.Handler.Roles
 {
-	internal class AddRoleHandler : IPacketHandler<AddRoleRequestClientPacket>
+	internal class AddRoleHandler : BasePacketHandler
 	{
-		public ClientObject Sender { get; set; }
 		private readonly ChatRepository chatRepository;
 		private readonly RoleRepository roleRepository;
 		private readonly RoleService roleService;
 
-		public AddRoleHandler(ClientObject sender)
+		public AddRoleHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			roleRepository = Program.ServiceProvider.GetRequiredService<RoleRepository>();
 			roleService = Program.ServiceProvider.GetRequiredService<RoleService>();
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 		}
 
-		public void HandlePacket(AddRoleRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(AddRoleRequestClientPacket packet)
-		{
+			if (!(clientPacket is AddRoleRequestClientPacket packet))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			ChatRoleClientModel roleModel = packet.RoleModel;
 			if(roleService.IsRoleExists(packet.RoleModel.Name))
 			{
-				Sender.SendPacket(new AddRoleResponseServerPacket(false, "Role with this name already exists"));
+				sender.SendPacket(new AddRoleResponseServerPacket(false, "Role with this name already exists"));
 				return;
 			}
 			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			if (chat == null)
 			{
-				Sender.SendPacket(new AddRoleResponseServerPacket(false, "Chat not found"));
+				sender.SendPacket(new AddRoleResponseServerPacket(false, "Chat not found"));
 				return;
 			}
 

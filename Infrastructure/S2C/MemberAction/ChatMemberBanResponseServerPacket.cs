@@ -11,6 +11,10 @@ namespace Infrastructure.S2C.MemberAction
 		public bool Status { get; set; }
 		public string? Message { get; set; }
 
+		public ChatMemberBanResponseServerPacket() : base(PacketType.ChatMemberBanResponse)
+		{
+		}
+
 		public ChatMemberBanResponseServerPacket(bool status) : base(PacketType.ChatMemberBanResponse)
 		{
 			Status = status;

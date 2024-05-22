@@ -9,7 +9,36 @@ using Server.Chat;
 
 namespace Server.Db
 {
-    internal class ChatRepository : IRepository<Chat.Channel>
+    interface IChatRepository
+    {
+        public Chat.Channel Add(Channel sender);
+
+        public IQueryable<Chat.Channel> GetAll();
+
+        public Task<IQueryable<Chat.Channel>> GetAllAsync();
+
+        public Chat.Channel GetById(int id);
+
+        public Task<Chat.Channel> GetByIdAsync(int id);
+
+        public Chat.Channel GetByIdWithIncludes(int id);
+
+
+        public Task<Chat.Channel> GetByIdWithIncludesAsync(int id);
+
+
+        public bool Remove(int id);
+
+
+        public int Save();
+
+
+        public Task<int> SaveAsync();
+
+
+        public Chat.Channel Update(Channel sender);
+	}
+    internal class ChatRepository : IChatRepository
     {
         public ChatRepository(ApplicationContext _context)
         {
@@ -17,7 +46,7 @@ namespace Server.Db
         }
 
         private readonly ApplicationContext context;
-        public Chat.Channel Add(in Chat.Channel sender)
+        public Chat.Channel Add(Chat.Channel sender)
         {
             return context.Add(sender).Entity;
         }
@@ -67,17 +96,7 @@ namespace Server.Db
             return await context.SaveChangesAsync();
         }
 
-        public Chat.Channel Select(Expression<Func<Chat.Channel, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Chat.Channel> SelectAsync(Expression<Func<Chat.Channel, bool>> predicate)
-        {
-            return await context.Channels.FirstOrDefaultAsync(predicate);
-        }
-
-        public Chat.Channel Update(in Chat.Channel sender)
+        public Chat.Channel Update(Channel sender)
         {
             return context.Channels.Update(sender).Entity;
         }

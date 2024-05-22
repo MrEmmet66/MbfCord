@@ -34,6 +34,8 @@ namespace Client.Net
 		public event EventHandler<ChatMemberUpdateEventArgs> ChatMemberUpdated;
 		public event EventHandler<ChatEventArgs> ChatRemove;
 		public event EventHandler<ChatUpdateEventArgs> ChatEdit;
+		public event EventHandler<ChatBansEventArgs> ChatBansResult;
+		public event EventHandler<ServerResponseEventArgs> ChatRemoveResponse;
 
 
 

@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S.Role;
+﻿using Infrastructure.C2S;
+using Infrastructure.C2S.Role;
 using Infrastructure.S2C.Model;
 using Infrastructure.S2C.Roles;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,39 +16,42 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Roles
 {
-	internal class EditRolePacketHandler : IPacketHandler<EditRoleRequestClientPacket>
+	internal class EditRolePacketHandler : BasePacketHandler
 	{
 		private readonly RoleRepository roleRepository;
 		private readonly IUserRepository userRepository;
 		private readonly ChatService chatService;
-		public ClientObject Sender { get; set; }
-		public EditRolePacketHandler(ClientObject sender)
+		public EditRolePacketHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			roleRepository = Program.ServiceProvider.GetRequiredService<RoleRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 			chatService = Program.ServiceProvider.GetRequiredService<ChatService>();
 		}
 
-		public void HandlePacket(EditRoleRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(EditRoleRequestClientPacket packet)
-		{
-			User user = await userRepository.GetByIdWithIncludesAsync(Sender.User.Id);
+			if (!(clientPacket is EditRoleRequestClientPacket packet))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
+			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
 			Role role = await roleRepository.GetByIdAsync(packet.RoleModel.Id);
 			if (role == null)
 			{
-				Sender.SendPacket(new EditRoleResponseServerPacket(false, "Role not found"));
+				sender.SendPacket(new EditRoleResponseServerPacket(false, "Role not found"));
 				return;
 			}
 			Role userRole = user.Roles.FirstOrDefault(r => r.Chat.Id == role.Chat.Id);
 			if (userRole == null || !userRole.CanSetRole)
 			{
-				Sender.SendPacket(new EditRoleResponseServerPacket(false, "You don't have permission to edit this role"));
+				sender.SendPacket(new EditRoleResponseServerPacket(false, "You don't have permission to edit this role"));
 				return;
+			}
+			if(role.IsOwner)
+			{
+				sender.SendPacket(new EditRoleResponseServerPacket(false, "Editing owner role is not allowed"));
 			}
 			role.Name = packet.RoleModel.Name;
 			role.CanSetRole = packet.RoleModel.CanSetRole;
@@ -58,7 +62,7 @@ namespace Server.Handler.Roles
 
 			roleRepository.Update(role);
 			await roleRepository.SaveAsync();
-			Sender.SendPacket(new EditRoleResponseServerPacket(true, "Role updated"));
+			sender.SendPacket(new EditRoleResponseServerPacket(true, "Role updated"));
 			ChatRoleClientModel updatedRole = new ChatRoleClientModel(role.Id, role.Name, role.CanSendMessage, role.CanKick, role.CanSetRole, role.CanBan, role.CanMute);
 			updatedRole.IsOwner = role.IsOwner;
 			RoleUpdateServerPacket roleUpdatePacket = new RoleUpdateServerPacket(updatedRole, role.Chat.Id);

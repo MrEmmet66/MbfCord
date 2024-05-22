@@ -1,4 +1,5 @@
 ﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Chat;
 using Infrastructure.S2C.Chat;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,33 +17,32 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Chat
 {
-	internal class ChatLeaveHandler : IPacketHandler<BaseChatRequestClientPacket>
+	internal class ChatLeaveHandler : BasePacketHandler
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly UserService userService;
 		private readonly MessageService messageService;
 
-		public ClientObject Sender { get; set; }
-		public ChatLeaveHandler(ClientObject sender)
+		public ChatLeaveHandler(ClientObject sender) : base(sender)
 		{
-			Sender = sender;
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
 		}
 
-		public void HandlePacket(BaseChatRequestClientPacket packet)
+		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
 		{
-			throw new NotImplementedException();
-		}
-
-		public async Task HandlePacketAsync(BaseChatRequestClientPacket packet)
-		{
+			if (!(clientPacket is BaseChatRequestClientPacket packet && clientPacket.Type == PacketType.ChatLeaveRequest))
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
+				return;
+			}
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
-			User user = Sender.User;
+			User user = sender.User;
 			await userService.KickUserAsync(chat, user);
 			ChatLeaveResponseServerPacket chatLeaveResponseServerPacket = new ChatLeaveResponseServerPacket(packet.ChatId, true);
-			Sender.SendPacket(PacketType.ChatLeaveResult, chatLeaveResponseServerPacket.Serialize());
+			sender.SendPacket(PacketType.ChatLeaveResult, chatLeaveResponseServerPacket.Serialize());
 			messageService.AddSystemMessage($"{user.Username} has left the chat", chat);
 
 			Console.WriteLine("chat leave handled");

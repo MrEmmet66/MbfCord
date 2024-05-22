@@ -29,7 +29,8 @@ namespace Server.Handler.Chat.ChatCreate
 		{
 			if(!(clientPacket is ChatCreateClientPacket packet))
 			{
-				await nextHandler.HandlePacketAsync(clientPacket);
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(clientPacket);
 				return;
 			}
 			User user = await userRepository.GetByIdAsync(sender.User.Id);

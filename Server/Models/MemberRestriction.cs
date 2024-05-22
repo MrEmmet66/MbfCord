@@ -16,5 +16,9 @@ namespace Server.Chat
 		public DateTime MuteEnd { get; set; }
 		public DateTime BanStart { get; set; }
 		public DateTime BanEnd { get; set; }
+		public User? BannedBy { get; set; }
+		public User? MutedBy { get; set; }
+		public string? MuteReason { get; set; }
+		public string? BanReason { get; set; }
 	}
 }

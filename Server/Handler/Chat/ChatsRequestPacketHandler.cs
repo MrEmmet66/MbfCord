@@ -15,30 +15,30 @@ using System.Threading.Tasks;
 
 namespace Server.Handler.Chat
 {
-    internal class ChatsRequestPacketHandler : IPacketHandler<BaseClientPacket>
+    internal class ChatsRequestPacketHandler : BasePacketHandler
     {
         private readonly ChatRepository chatRepository;
 
-		public ClientObject Sender { get; set; }
 
-		public ChatsRequestPacketHandler(ClientObject sender)
+        public ChatsRequestPacketHandler(ClientObject sender) : base(sender)
         {
-            Sender = sender;
             chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
         }
 
-        public async Task HandlePacketAsync(BaseClientPacket packet)
+        public override async Task HandlePacketAsync(BaseClientPacket packet)
         {
-            IQueryable<Channel> chats = await chatRepository.GetAllAsync();
+			if (packet.Type != PacketType.ChatsRequest)
+			{
+				if (nextHandler != null)
+					await nextHandler.HandlePacketAsync(packet);
+				return;
+			}
+			IQueryable<Channel> chats = await chatRepository.GetAllAsync();
             ChatsResultServerPacket chatsResultServerPacket = new ChatsResultServerPacket(JsonConvert.SerializeObject(chats));
             string json = chatsResultServerPacket.Serialize();
-            Sender.SendPacket(PacketType.ChatsResult, json);
+            sender.SendPacket(PacketType.ChatsResult, json);
             Console.WriteLine("Chats request handled");
         }
 
-        public void HandlePacket(BaseClientPacket packet)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

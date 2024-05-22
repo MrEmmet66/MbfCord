@@ -1,6 +1,8 @@
 ﻿using Client.MVVM.Core;
 using Client.Net;
 using Client.Net.Event;
+using Infrastructure;
+using Infrastructure.C2S.Auth;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,7 +13,7 @@ using System.Windows;
 
 namespace Client.MVVM.ViewModel
 {
-    class RegisterViewModel : INotifyPropertyChanged
+    class RegisterViewModel : BaseViewModel
     {
         private string status;
         public string Username { get; set; }
@@ -23,13 +25,12 @@ namespace Client.MVVM.ViewModel
             set
             {
                 status = value;
-                OnPropertyChanged("Status");
-            }
+				OnPropertyChanged(nameof(Status));
+			}
         }
         public RelayCommand RegisterRequestCommand { get; set; }
         private ServerConnection serverConnection;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         public RegisterViewModel()
         {
@@ -44,11 +45,6 @@ namespace Client.MVVM.ViewModel
             MessageBox.Show(Status);
         }
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         private void TryRegister()
         {
             if (Password.Equals(ConfirmPassword))
@@ -57,8 +53,10 @@ namespace Client.MVVM.ViewModel
                 return;
             }
             serverConnection.EstablishConnection();
-            serverConnection.SendRegisterPacket(Username, Password);
-            Status = "Registering...";
+            AuthClientPacket packet = new AuthClientPacket(PacketType.RegisterRequest, Username, Password);
+			serverConnection.SendPacket(packet);
+
+			Status = "Registering...";
         }
     }
 }
