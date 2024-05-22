@@ -18,11 +18,8 @@ namespace Server.Chat
         }
         public Channel() { }
         public int Id { get; set; }
-        [JsonIgnore]
         public List<Message>? Messages { get; set; }
-        [JsonIgnore]
         public List<User> Members { get; set; }
-        [JsonIgnore]
         public List<Role> Roles { get; set; }
         
         public string Name { get; set; }

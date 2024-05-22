@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.MemberAction;
 using Infrastructure.S2C;
 using Infrastructure.S2C.Model;
@@ -40,6 +41,13 @@ namespace Server.Handler.Chat
 			if (user == null)
 			{
 				Console.WriteLine("User not found");
+				return;
+			}
+			User checkUser = await userRepository.GetByUsernameAsync(packet.NewUsername);
+			if (checkUser != null)
+			{
+				BaseResponseServerPacket responsePacket = new BaseResponseServerPacket(PacketType.ActionDenied, false, "Username already taken");
+				sender.SendPacket(responsePacket);
 				return;
 			}
 			user.Username = packet.NewUsername;

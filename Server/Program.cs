@@ -25,12 +25,12 @@ namespace Server
             builder.Services.AddTransient<MemberRestrictionService>();
 			builder.Services.AddTransient<ChatService>();
             builder.Services.AddTransient<RoleService>();
+			builder.Services.AddTransient<SecurityService>(service => new SecurityService("nPx9wRUeebM762ul"));
 			using IHost host = builder.Build();
             ServiceProvider = host.Services;
             host.RunAsync();
             ServerObject serverObject = ServerObject.Instance;
             serverObject.Start();
         }
-
     }
 }

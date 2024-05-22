@@ -1,6 +1,7 @@
 ﻿using Infrastructure;
 using Infrastructure.C2S;
 using Infrastructure.S2C.Chat;
+using Infrastructure.S2C.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -28,18 +29,17 @@ namespace Server.Handler.Chat
 				return;
 			}
             IQueryable<Channel> channels = await chatRepository.GetAllAsync();
-            List<Channel> userChannels = new List<Channel>();
+            List<ChatClientModel> userChannels = new List<ChatClientModel>();
             foreach (var channel in channels)
             {
                 if (chatRepository.GetByIdWithIncludes(channel.Id).Members.Contains(sender.User))
                 {
-                    userChannels.Add(channel);
-                }
+					userChannels.Add(new ChatClientModel(channel.Id, channel.Name, channel.Description));
+				}
             }
             string channelsJson = JsonConvert.SerializeObject(userChannels);
-            UserChatsResultServerPacket userChatsResult = new UserChatsResultServerPacket(channelsJson);
-            sender.SendPacket(PacketType.UserChatsResult, userChatsResult.Serialize());
-            Console.WriteLine("user chat otbayraktaren");
+            UserChatsResultServerPacket userChatsResult = new UserChatsResultServerPacket(userChannels);
+            sender.SendPacket(userChatsResult);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infrastructure.S2C.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.S2C.Chat
 {
-	public class ChatsResultServerPacket : BaseServerPacket, IJsonDataPacket
+	public class ChatsResultServerPacket : BaseServerPacket
 	{
-		public ChatsResultServerPacket(string chatsJson) : base(PacketType.ChatsResult)
+		public ChatsResultServerPacket(List<ChatClientModel> chats) : base(PacketType.ChatsResult)
 		{
-			JsonData = chatsJson;
+			Chats = chats;
 		}
-		public string JsonData { get; set; }
+		public List<ChatClientModel> Chats { get; set; }
 	}
 }

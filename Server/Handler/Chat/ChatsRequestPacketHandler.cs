@@ -1,6 +1,7 @@
 ﻿using Infrastructure;
 using Infrastructure.C2S;
 using Infrastructure.S2C.Chat;
+using Infrastructure.S2C.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Server.Chat;
@@ -34,10 +35,13 @@ namespace Server.Handler.Chat
 				return;
 			}
 			IQueryable<Channel> chats = await chatRepository.GetAllAsync();
-            ChatsResultServerPacket chatsResultServerPacket = new ChatsResultServerPacket(JsonConvert.SerializeObject(chats));
-            string json = chatsResultServerPacket.Serialize();
-            sender.SendPacket(PacketType.ChatsResult, json);
-            Console.WriteLine("Chats request handled");
+            List<ChatClientModel> chatsModel = new List<ChatClientModel>();
+            foreach (Channel ch in chats)
+            {
+				chatsModel.Add(new ChatClientModel(ch.Id, ch.Name, ch.Description));
+			}
+            ChatsResultServerPacket chatsResultServerPacket = new ChatsResultServerPacket(chatsModel);
+            sender.SendPacket(chatsResultServerPacket);
         }
 
     }

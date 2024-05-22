@@ -21,20 +21,6 @@ namespace Client.MVVM.ViewModel
     class ChatsWindowViewModel : BaseViewModel
 
 	{
-        public ChatsWindowViewModel()
-        {
-            serverConnection = ServerConnection.GetInstance();
-
-			Chats = new ObservableCollection<Chat>();
-			JoinChatCommand = new RelayCommand(o => RequestChatJoin(), o => SelectedChat != null);
-			CreateChatCommand = new RelayCommand(o => new ChatCreateWindow().ShowDialog());
-
-			serverConnection.ChatsResult += OnChatsResult;
-			serverConnection.ChatJoinResult += OnChatJoinResult;
-			serverConnection.NewChat += OnNewChat;
-
-			RequestChats();
-		}
 		private ServerConnection serverConnection;
         private Chat selectedChat;
 
@@ -53,6 +39,21 @@ namespace Client.MVVM.ViewModel
 				OnPropertyChanged(nameof(SelectedChat));
 
 			}
+		}
+
+		public ChatsWindowViewModel()
+		{
+			serverConnection = ServerConnection.GetInstance();
+
+			Chats = new ObservableCollection<Chat>();
+			JoinChatCommand = new RelayCommand(o => RequestChatJoin(), o => SelectedChat != null);
+			CreateChatCommand = new RelayCommand(o => new ChatCreateWindow().ShowDialog());
+
+			serverConnection.ChatsResult += OnChatsResult;
+			serverConnection.ChatJoinResult += OnChatJoinResult;
+			serverConnection.NewChat += OnNewChat;
+
+			RequestChats();
 		}
 
 

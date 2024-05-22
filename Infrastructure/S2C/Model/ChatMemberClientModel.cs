@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.S2C.Model
 {
-	public class ChatMemberClientModel
+	public class ChatMemberClientModel : IClientModel
 	{
 		public ChatMemberClientModel(int id, string username, ChatRoleClientModel role)
 		{

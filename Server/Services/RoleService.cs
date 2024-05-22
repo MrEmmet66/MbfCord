@@ -21,11 +21,5 @@ namespace Server.Services
 		{
 			return roleRepository.GetAll().Any(r => r.Name == roleName);
 		}
-
-		public Role GetRoleByName(string roleName)
-		{
-			return roleRepository.GetAll().FirstOrDefault(r => r.Name == roleName);
-		}
-
 	}
 }

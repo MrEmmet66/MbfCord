@@ -59,7 +59,7 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <WrapPanel>
@@ -87,10 +87,10 @@
             </ListBox.ContextMenu>
         </ListBox>
         <Button Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding OpenChatsWindowCommand}" Background="#3b3b3b" Content="+" Margin="5 0 10 0" Grid.Column="0" Grid.Row="1"/>
-        <WrapPanel Grid.Row="2" VerticalAlignment="Bottom">  
+        <WrapPanel Grid.Row="2" VerticalAlignment="Bottom">
             <materialDesign:PackIcon Kind="Account" Width="30" Height="30"/>
-            <TextBlock Text="{Binding ClientInfo.Name}" FontSize="15" Margin="0 5 0 0" FontWeight="Bold"/>
-            <Button x:Name="changeUsernameButton" Style="{DynamicResource MaterialDesignFlatButton}" Click="changeUsernameButton_Click">
+            <TextBlock Text="{Binding EditedUsername}" FontSize="15" Margin="0 5 0 0" FontWeight="Bold"/>
+            <Button x:Name="changeUsernameButton" Style="{DynamicResource MaterialDesignFlatButton}" Margin="5 0 0 0" Click="changeUsernameButton_Click">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Pencil" Width="20" Height="20"/>
                 </StackPanel>

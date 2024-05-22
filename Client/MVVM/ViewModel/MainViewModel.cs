@@ -44,6 +44,7 @@ namespace Client.MVVM.ViewModel
         public ObservableCollection<Message> ChatMessages { get; set; }
         public ObservableCollection<ChatMemberClientModel> ChatMembers { get; set; }
         public ObservableCollection<ChatRoleClientModel> ChatRoles { get; set; }
+        public string EditedUsername { get; set; }
 
         public ChatMemberClientModel ClientMember { get; set; }
 
@@ -52,18 +53,7 @@ namespace Client.MVVM.ViewModel
         public ClientInfo ClientInfo { get; set; }
         public bool CanLeave { get; set; }
 
-		public ChatMemberClientModel SelectedMember
-        {
-            get
-            {
-                return selectedMember;
-            }
-            set
-            {
-                selectedMember = value;
-                OnPropertyChanged(nameof(SelectedMember));
-            }
-        }
+		public ChatMemberClientModel SelectedMember { get; set; }
 		public Chat SelectedChat
 		{
 			get
@@ -76,8 +66,8 @@ namespace Client.MVVM.ViewModel
 				if (value != null)
 				{
                     ChatRoles.Clear();
-					serverConnection.RequestChatMessages(value.Id);
-					serverConnection.RequestChatMembers(value.Id);
+					RequestChatMessages(value.Id);
+					RequestChatMembers(value.Id);
 
 				}
 				ChatMessages.Clear();
@@ -93,8 +83,8 @@ namespace Client.MVVM.ViewModel
             ChatMembers = new ObservableCollection<ChatMemberClientModel>();
 			ChatRoles = new ObservableCollection<ChatRoleClientModel>();
 
-			SendMessageCommand = new RelayCommand(o => SendChatMessage((string)o));
-            LeaveChatCommand = new RelayCommand(o => serverConnection.RequestChatLeave((int)o));
+			SendMessageCommand = new RelayCommand(o => SendChatMessage(Message));
+            LeaveChatCommand = new RelayCommand(o => RequestChatLeave(SelectedChat.Id));
             KickMemberCommand = new RelayCommand(o => RequestMemberKick());
             OpenChatsWindowCommand = new RelayCommand(o => new ChatsWindow().ShowDialog());
             OpenMemberBanWindowCommand = new RelayCommand(o => OpenBanWindow(), o => (SelectedMember != null && ClientMember.Role.CanBan));
@@ -111,7 +101,7 @@ namespace Client.MVVM.ViewModel
             serverConnection.ChatMembersResult += OnChatMembersResult;
             serverConnection.ChatLeaveResult += OnChatLeaveResult;
             serverConnection.NewChatMember += OnNewChatMember;
-            serverConnection.UsernameResult += (sender, args) => ClientInfo = new ClientInfo(args.Id, args.Username);
+            serverConnection.UsernameResult += OnClientInfoResult;
             serverConnection.ChatMemberKickResult += OnChatMemberKick;
             serverConnection.ChatMemberRemoved += OnChatMemberRemoved;
 			serverConnection.ChatMemberActionResponse += (sender, args) => MessageBox.Show(args.Message, "Result", MessageBoxButton.OK, args.Status ? MessageBoxImage.Information : MessageBoxImage.Error);
@@ -121,10 +111,42 @@ namespace Client.MVVM.ViewModel
             serverConnection.ChatRemove += OnChatRemove;
             serverConnection.ChatEdit += OnChatUpdate;
 
-            serverConnection.RequestUserChats();
+            RequestUserChats();
             RequestUsername();
             
         }
+
+		private void OnClientInfoResult(object? sender, ClientInfoResultEventArgs e)
+		{
+            ClientInfo = new ClientInfo(e.Id, e.Username);
+			EditedUsername = e.Username;
+			OnPropertyChanged(nameof(EditedUsername));
+		}
+
+		private void RequestChatLeave(int chatId)
+		{
+			BaseChatRequestClientPacket chatLeaveRequest = new BaseChatRequestClientPacket(PacketType.ChatLeaveRequest, chatId);
+			serverConnection.SendPacket(chatLeaveRequest);
+		}
+
+		private void RequestChatMembers(int chatId)
+		{
+            BaseChatRequestClientPacket chatMembersRequest = new BaseChatRequestClientPacket(PacketType.ChatMembersRequest, chatId);
+			serverConnection.SendPacket(chatMembersRequest);
+		}
+
+		private void RequestChatMessages(int id)
+		{
+			BaseChatRequestClientPacket chatMessagesRequest = new BaseChatRequestClientPacket(PacketType.ChatMessagesRequest, id);
+			serverConnection.SendPacket(chatMessagesRequest);
+		}
+
+
+		private void RequestUserChats()
+		{
+			BaseClientPacket userChatsRequest = new BaseClientPacket(PacketType.UserChatsRequest);
+			serverConnection.SendPacket(userChatsRequest);
+		}
 
 		private void RequestMemberUnmute()
 		{
@@ -165,6 +187,16 @@ namespace Client.MVVM.ViewModel
             {
                 int index = ChatMembers.IndexOf(ChatMembers.FirstOrDefault(m => m.Id == e.Member.Id));
                 Application.Current.Dispatcher.Invoke(() => ChatMembers[index] = e.Member);
+			}
+            if(e.Member.Id == ClientInfo.Id)
+            {
+				ClientMember = e.Member;
+				CanLeave = ClientMember.Role.IsOwner != true;
+                EditedUsername = ClientMember.Username;
+				OnPropertyChanged(nameof(ClientMember));
+				OnPropertyChanged(nameof(CanLeave));
+				OnPropertyChanged(nameof(EditedUsername));
+
 
 			}
 		}
@@ -172,14 +204,14 @@ namespace Client.MVVM.ViewModel
 		private void OnRoleRemove(object? sender, ChatEventArgs e)
 		{
             if(SelectedChat?.Id == e.ChatId)
-                serverConnection.RequestChatMembers(SelectedChat.Id);
+                RequestChatMembers(SelectedChat.Id);
 		}
 
 		private void OnRoleUpdate(object? sender, RoleUpdateEventArgs e)
         {
             if(e.ChatId == SelectedChat.Id)
             {
-                serverConnection.RequestChatMembers(e.ChatId);
+                RequestChatMembers(e.ChatId);
             }
         }
 
@@ -219,9 +251,9 @@ namespace Client.MVVM.ViewModel
                 Chat chat = UserChats.FirstOrDefault(c => c.Id == e.ChatId);
 				if (e.MemberId == ClientInfo.Id)
                 {
-                    UserChats.Remove(chat);
-                    if (SelectedChat.Id == e.ChatId)
-                        ChatMembers.Clear();
+					if (SelectedChat.Id == e.ChatId)
+						ChatMembers.Clear();
+					UserChats.Remove(chat);
                 }
                 if(SelectedChat != null && SelectedChat.Id == e.ChatId)
                 {

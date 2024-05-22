@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:Client"
         xmlns:viewmodel="clr-namespace:Client.MVVM.ViewModel"
         mc:Ignorable="d"
-        Title="RegisterWindow" Height="250" Width="300" Style="{StaticResource MaterialDesignWindow}">
+        Title="Register" Height="250" Width="300" Style="{StaticResource MaterialDesignWindow}">
     <Window.DataContext>
         <viewmodel:RegisterViewModel/>
     </Window.DataContext>
@@ -23,13 +24,13 @@
         </Grid.ColumnDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Content="Username"/>
-        <TextBox Grid.Row="0" Grid.Column="1" x:Name="UsernameTextBox" Text="{Binding Username}"/>
+        <TextBox Grid.Row="0" Grid.Column="1" materialDesign:HintAssist.Hint="Username" x:Name="UsernameTextBox" Text="{Binding Username}"/>
         <Label Grid.Row="1" Grid.Column="0" Content="Password"/>
-        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PasswordBox" Text="{Binding Password}"/>
+        <TextBox Grid.Row="1" Grid.Column="1" materialDesign:HintAssist.Hint="Password" x:Name="PasswordBox" Text="{Binding Password}"/>
         <Label Grid.Row="2" Grid.Column="0" Content="Confirm Password"/>
-        <TextBox Grid.Row="2" Grid.Column="1" x:Name="ConfirmPasswordBox"/>
-        <Button Grid.Row="2" Grid.Column="0" Content="Register" Grid.ColumnSpan="2" Margin="75,76,75,-76" Command="{Binding RegisterRequestCommand}"/>
-        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding Status}" Foreground="Red" HorizontalAlignment="Center"/>
+        <TextBox Grid.Row="2" Grid.Column="1" materialDesign:HintAssist.Hint="Repeat Password" x:Name="ConfirmPasswordBox"/>
+        <Button Grid.Row="2" Grid.Column="0"  Content="Register" Grid.ColumnSpan="2" Margin="75,76,75,-76" Command="{Binding RegisterRequestCommand}"/>
+        <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding Status}" HorizontalAlignment="Center"/>
 
     </Grid>
 </Window>

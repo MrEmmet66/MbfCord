@@ -20,13 +20,9 @@ namespace Server.Chat
         public int Id { get; set; }
         public string Username { get; set; }
         public string HashedPassword { get; set; }
-        [JsonIgnore]
         public List<Message>? Messages { get; set; }
-        [JsonIgnore]
         public List<Channel>? Channels { get; set; }
-        [JsonIgnore]
         public List<Role>? Roles { get; set; }
-        [JsonIgnore]
         public List<MemberRestriction>? MemberRestrictions { get; set; }
 
         public List<MemberRestriction>? GivedMutes { get; set; }

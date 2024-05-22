@@ -53,6 +53,10 @@ namespace Server.Handler.Roles
 			{
 				sender.SendPacket(new EditRoleResponseServerPacket(false, "Editing owner role is not allowed"));
 			}
+			if(!IsValidName(packet.RoleModel.Name))
+			{
+				sender.SendPacket(new EditRoleResponseServerPacket(false, "Invalid Name"));
+			}
 			role.Name = packet.RoleModel.Name;
 			role.CanSetRole = packet.RoleModel.CanSetRole;
 			role.CanKick = packet.RoleModel.CanKick;
@@ -67,6 +71,11 @@ namespace Server.Handler.Roles
 			updatedRole.IsOwner = role.IsOwner;
 			RoleUpdateServerPacket roleUpdatePacket = new RoleUpdateServerPacket(updatedRole, role.Chat.Id);
 			chatService.SendPacketToClientsInChat(role.Chat, roleUpdatePacket);
+		}
+
+		private bool IsValidName(string name)
+		{
+			return name != null && name.Length > 0 && name.Length <= 50 && name != "Member" && name != "Owner";
 		}
 	}
 }

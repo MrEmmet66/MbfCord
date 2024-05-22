@@ -57,9 +57,6 @@ namespace Server.Handler.Chat
 			sender.SendPacket(new ChatEditResponseServerPacket(true, "Chat edited successfully"));
 			ChatUpdateServerPacket chatUpdatePacket = new ChatUpdateServerPacket(new ChatClientModel(chat.Id, chat.Name, chat.Description));
 			chatService.SendPacketToClientsInChat(chat, chatUpdatePacket);
-
-
-
 		}
 	}
 }

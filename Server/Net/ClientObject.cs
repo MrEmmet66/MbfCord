@@ -54,7 +54,5 @@ namespace Server.Net
             ServerObject.Instance.Clients.Remove(this);
             Console.WriteLine($"Client {Id} disconnected");
         }
-
-
     }
 }

@@ -85,7 +85,5 @@ namespace Server.Handler.Chat.ChatJoin
 		{
 			return chat.Roles.FirstOrDefault(r => r.Name == "Member");
 		}
-
-
 	}
 }

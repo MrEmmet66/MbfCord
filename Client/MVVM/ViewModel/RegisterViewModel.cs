@@ -35,7 +35,7 @@ namespace Client.MVVM.ViewModel
         public RegisterViewModel()
         {
             serverConnection = ServerConnection.GetInstance();
-            RegisterRequestCommand = new RelayCommand(o => TryRegister());
+            RegisterRequestCommand = new RelayCommand(o => TryRegister(), o => (Password != null && Password.Length >= 6));
             serverConnection.RegisterResult += OnRegisterResult;
         }
 

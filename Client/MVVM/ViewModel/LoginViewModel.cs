@@ -1,6 +1,8 @@
 ﻿using Client.MVVM.Core;
 using Client.Net;
 using Client.Net.Event;
+using Infrastructure;
+using Infrastructure.C2S.Auth;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,12 +12,12 @@ using System.Windows;
 
 namespace Client.MVVM.ViewModel
 {
-    internal class LoginViewModel
+    internal class LoginViewModel : BaseViewModel
     {
 
         public string Username { get; set; }
         public string Password { get; set; }
-        public string Error { get; set; }
+        public string Status { get; set; }
 
         public RelayCommand TryLoginCommand { get; set; }
         public RelayCommand OpenRegisterWindowCommand { get; set; }
@@ -24,14 +26,15 @@ namespace Client.MVVM.ViewModel
         public LoginViewModel()
         {
             serverConnection = ServerConnection.GetInstance();
-            TryLoginCommand = new RelayCommand(o => serverConnection.TryLogin(Username, Password), o => (!string.IsNullOrEmpty(Username) &&  !string.IsNullOrEmpty(Password)));
+            TryLoginCommand = new RelayCommand(o => TryLogin(Username, Password), o => (!string.IsNullOrEmpty(Username) &&  !string.IsNullOrEmpty(Password)));
             OpenRegisterWindowCommand = new RelayCommand(o => new RegisterWindow().Show());
             serverConnection.LoginResult += OnLoginResult;
         }
 
         private void OnLoginResult(object? sender, AuthEventArgs e)
         {
-            Error = e.Message;
+            Status = e.Message;
+            OnPropertyChanged(nameof(Status));
             if (e.Status)
             {
                 Application.Current.Dispatcher.Invoke(() =>
@@ -57,5 +60,14 @@ namespace Client.MVVM.ViewModel
                 MessageBox.Show(e.Message);
             }
         }
-    }
+
+		public void TryLogin(string username, string password)
+		{
+			serverConnection.EstablishConnection();
+			AuthClientPacket packet = new AuthClientPacket(PacketType.LoginRequest, username, password);
+			serverConnection.SendPacket(packet);
+            Status = "Logging in...";
+            OnPropertyChanged(nameof(Status));
+		}
+	}
 }

@@ -18,10 +18,7 @@ namespace Infrastructure.S2C
 
 		public string Serialize()
 		{
-			return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
-			{
-				TypeNameHandling = TypeNameHandling.All
-			});
+			return JsonConvert.SerializeObject(this);
 		}
 	}
 }

@@ -33,7 +33,7 @@ namespace Server.Handler.Roles
 				return;
 			}
 			ChatRoleClientModel roleModel = packet.RoleModel;
-			if(roleService.IsRoleExists(packet.RoleModel.Name))
+			if(roleRepository.GetByName(roleModel.Name) != null)
 			{
 				sender.SendPacket(new AddRoleResponseServerPacket(false, "Role with this name already exists"));
 				return;

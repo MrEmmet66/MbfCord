@@ -41,8 +41,5 @@ namespace Server.Chat
 		public bool CanBan { get; set; }
 		public bool CanMute { get; set; }
 		public bool IsOwner { get; set; }
-
-
-
 	}
 }

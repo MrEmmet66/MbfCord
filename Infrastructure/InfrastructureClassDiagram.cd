@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Infrastructure.C2S.Auth.AuthClientPacket" Collapsed="true">
+    <Position X="13" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Auth\AuthClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Chat.BaseChatRequestClientPacket" Collapsed="true">
+    <Position X="19.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>C2S\Chat\BaseChatRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Chat.ChatCreateClientPacket" Collapsed="true">
+    <Position X="15.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Chat\ChatCreateClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Chat.ChatEditRequestClientPacket" Collapsed="true">
+    <Position X="15" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Chat\ChatEditRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Chat.ChatMemberKickClientPacket" Collapsed="true">
+    <Position X="17" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Chat\ChatMemberKickClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.MemberAction.BaseChatMemberActionClientPacket" Collapsed="true">
+    <Position X="21.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\MemberAction\BaseChatMemberActionClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.MemberAction.ChatMemberBanRequestClientPacket" Collapsed="true">
+    <Position X="19.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\MemberAction\ChatMemberBanRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.MemberAction.ChatMemberKickRequestClientPacket" Collapsed="true">
+    <Position X="22" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\MemberAction\ChatMemberKickRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.MemberAction.ChatMemberMuteRequestClientPacket" Collapsed="true">
+    <Position X="17.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\MemberAction\ChatMemberMuteRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.MemberAction.UsernameEditRequestClientPacket" Collapsed="true">
+    <Position X="13" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\MemberAction\UsernameEditRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Message.MessageClientPacket" Collapsed="true">
+    <Position X="13" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>C2S\Message\MessageClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Role.AddRoleRequestClientPacket" Collapsed="true">
+    <Position X="15.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>C2S\Role\AddRoleRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Role.EditRoleRequestClientPacket" Collapsed="true">
+    <Position X="17.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Role\EditRoleRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Role.RemoveRoleRequestClientPacket" Collapsed="true">
+    <Position X="19.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Role\RemoveRoleRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.Role.RoleAssignRequestClientPacket" Collapsed="true">
+    <Position X="22" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>C2S\Role\RoleAssignRequestClientPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.C2S.BaseClientPacket" Collapsed="true">
+    <Position X="10.25" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>C2S\BaseClientPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Auth.AuthResponseServerPacket" Collapsed="true">
+    <Position X="38.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Auth\AuthResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Auth.ClientInfoResultServerPacket" Collapsed="true">
+    <Position X="47.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Auth\ClientInfoResultServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.Results.ChatBansResultServerPacket" Collapsed="true">
+    <Position X="45.25" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Chat\Results\ChatBansResultServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatEditResponseServerPacket" Collapsed="true">
+    <Position X="43" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Chat\ChatEditResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatJoinResponseServerPacket" Collapsed="true">
+    <Position X="40.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAgAAAAAIAAAAAQ=</HashCode>
+      <FileName>S2C\Chat\ChatJoinResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatLeaveResponseServerPacket" Collapsed="true">
+    <Position X="47.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAQ=</HashCode>
+      <FileName>S2C\Chat\ChatLeaveResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatMemberRemovedServerPacket" Collapsed="true">
+    <Position X="43" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>S2C\Chat\ChatMemberRemovedServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatMembersResultServerPacket" Collapsed="true">
+    <Position X="38.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Chat\ChatMembersResultServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatMessagesResultServerPacket" Collapsed="true">
+    <Position X="40.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Chat\ChatMessagesResultServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatRemovedServerPacket" Collapsed="true">
+    <Position X="38.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>S2C\Chat\ChatRemovedServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatRemoveResponseServerPacket" Collapsed="true">
+    <Position X="47.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Chat\ChatRemoveResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.ChatUpdateServerPacket" Collapsed="true">
+    <Position X="43" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>S2C\Chat\ChatUpdateServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.NewChatMemberServerPacket" Collapsed="true">
+    <Position X="38.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>S2C\Chat\NewChatMemberServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.NewChatServerPacket" Collapsed="true">
+    <Position X="45.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>S2C\Chat\NewChatServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Chat.UserChatsResultServerPacket" Collapsed="true">
+    <Position X="40.75" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Chat\UserChatsResultServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.MemberAction.ChatMemberBanResponseServerPacket" Collapsed="true">
+    <Position X="43" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\MemberAction\ChatMemberBanResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.MemberAction.ChatMemberKickResponseServerPacket" Collapsed="true">
+    <Position X="40.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAQ=</HashCode>
+      <FileName>S2C\MemberAction\ChatMemberKickResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.MemberAction.ChatMemberMuteResponseServerPacket" Collapsed="true">
+    <Position X="38.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAQ=</HashCode>
+      <FileName>S2C\MemberAction\ChatMemberMuteResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Message.MessageServerPacket" Collapsed="true">
+    <Position X="45.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAgAAAAAAAAAAAAAAAAAAAAABAAAAIAAIAAQ=</HashCode>
+      <FileName>S2C\Message\MessageServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Model.BannedMemberClientModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAgAQAAAAAAEAAAAAAAQAAAAAAQAAA=</HashCode>
+      <FileName>S2C\Model\BannedMemberClientModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Model.ChatClientModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="77.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Model\ChatClientModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Model.ChatMemberClientModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="79.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAEQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Model\ChatMemberClientModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Model.ChatMessageClientModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="76" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAAAAAAAAAAAAAAAAAABAAAAAAAIAAA=</HashCode>
+      <FileName>S2C\Model\ChatMessageClientModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Model.ChatRoleClientModel" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="77.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACgAAAAAAAAAACAAAAIAwAAAAAAAAAAAAAAiABAAA=</HashCode>
+      <FileName>S2C\Model\ChatRoleClientModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.AddRoleResponseServerPacket" Collapsed="true">
+    <Position X="40.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Roles\AddRoleResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.ChatRolesResponseServerPacket" Collapsed="true">
+    <Position X="47.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Roles\ChatRolesResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.EditRoleResponseServerPacket" Collapsed="true">
+    <Position X="45.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Roles\EditRoleResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.RemoveRoleResponseServerPacket" Collapsed="true">
+    <Position X="40.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Roles\RemoveRoleResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.RoleAssignResponseServerPacket" Collapsed="true">
+    <Position X="47.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\Roles\RoleAssignResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.RoleRemoveServerPacket" Collapsed="true">
+    <Position X="43" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>S2C\Roles\RoleRemoveServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.Roles.RoleUpdateServerPacket" Collapsed="true">
+    <Position X="45.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAQ=</HashCode>
+      <FileName>S2C\Roles\RoleUpdateServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Infrastructure.S2C.BaseResponseServerPacket" Collapsed="true">
+    <Position X="43" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>S2C\BaseResponseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.BaseServerPacket" Collapsed="true">
+    <Position X="36.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>S2C\BaseServerPacket.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Infrastructure.S2C.ChatMemberUpdateServerPacket" Collapsed="true">
+    <Position X="38.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>S2C\ChatMemberUpdateServerPacket.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Infrastructure.S2C.Model.IClientModel" Collapsed="true">
+    <Position X="76" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\Model\IClientModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Infrastructure.S2C.IJsonSerializer" Collapsed="true">
+    <Position X="77.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>S2C\IJsonSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Infrastructure.IResponsePacket" Collapsed="true">
+    <Position X="79.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>IResponsePacket.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Infrastructure.PacketType" Collapsed="true">
+    <Position X="76" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AKERBhEBSgIQNwngDSQiACACUgAAABQDlFCAIQBABAA=</HashCode>
+      <FileName>PacketType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

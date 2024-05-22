@@ -25,13 +25,12 @@
             </ListBox.ItemTemplate>
         </ListBox>
 
-        <!-- Информация о выбранном чате -->
         <StackPanel Grid.Column="1" Margin="10">
             <TextBlock x:Name="ChatName" Text="{Binding SelectedChat.Name}" FontSize="18" FontWeight="Bold"/>
             <TextBlock x:Name="ChatDescription" Text="{Binding SelectedChat.Description}" TextWrapping="Wrap" Margin="0,5,0,10"/>
             <Button x:Name="JoinChatButton" Content="Join" Command="{Binding JoinChatCommand}" />
         </StackPanel>
         
-        <Button Content="Create chat" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding CreateChatCommand}" Margin="10"/>
+        <Button Content="Create chat" HorizontalAlignment="Left" Grid.Column="1" VerticalAlignment="Bottom" Command="{Binding CreateChatCommand}" Margin="10"/>
     </Grid>
 </Window>
