@@ -84,9 +84,9 @@
                             <Separator Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3"/>
                             <TextBlock Margin="15 0 0 0" Text="Permissions" FontSize="15" Grid.Column="0" Grid.Row="3"/>
                             <StackPanel Grid.Row="4" Grid.Column="0" Margin="10 10 0 0">
-                                <uc:LabeledToggleButton Label="Can ban" IsChecked="{Binding SelectedRole.CanBan}"/>
+                                <uc:LabeledToggleButton Label="Can ban" IsChecked="{Binding SelectedRole.CanBan, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <uc:LabeledToggleButton Label="Can mute" IsChecked="{Binding SelectedRole.CanMute}"/>
-                                <uc:LabeledToggleButton Label="Can kick" IsChecked="{Binding SelectedRole.CanKick}"/>
+                                <uc:LabeledToggleButton Label="Can kick" IsChecked="{Binding SelectedRole.CanKick, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <uc:LabeledToggleButton Label="Can set role" IsChecked="{Binding SelectedRole.CanSetRole}"/>
                                 <uc:LabeledToggleButton Label="Can send message" IsChecked="{Binding SelectedRole.CanSendMessage}"/>
                             </StackPanel>
@@ -136,7 +136,7 @@
                         </DockPanel>
                         <DockPanel Grid.Row="3" Margin="5">
                             <TextBlock Text="Ban reason: "/>
-                            <TextBlock Text="{Binding SelectedBannedMember.Reason}"/>
+                            <TextBlock Text="{Binding SelectedBannedMember.BanReason}"/>
                         </DockPanel>
                         <DockPanel Grid.Row="4" Margin="5">
                             <TextBlock Text="Ban End: "/>

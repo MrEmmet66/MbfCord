@@ -269,7 +269,12 @@ namespace Client.Net
                             ChatBansResult?.Invoke(this, new ChatBansEventArgs(chatBansPacket.BannedMembers));
                             break;
 
-                        default:
+                        case PacketType.ChatMemberMuteResponse:
+                            ChatMemberMuteResponseServerPacket chatMemberMuteResponsePacket = JsonConvert.DeserializeObject<ChatMemberMuteResponseServerPacket>(jsonPacket);
+                            ChatMemberActionResponse?.Invoke(this, new ChatActionEventArgs(chatMemberMuteResponsePacket.Status, chatMemberMuteResponsePacket.Message));
+                            break;
+
+						default:
                             break;
 
                     }

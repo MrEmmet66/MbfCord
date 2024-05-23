@@ -44,6 +44,7 @@ namespace Client
 		{
             Button button = sender as Button;
             ContextMenu contextMenu = button.ContextMenu;
+
 			contextMenu.PlacementTarget = button;
 			contextMenu.IsOpen = true;
             e.Handled = true;

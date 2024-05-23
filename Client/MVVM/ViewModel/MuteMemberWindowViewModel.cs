@@ -22,7 +22,7 @@ namespace Client.MVVM.ViewModel
 
 		public MuteMemberWindowViewModel()
 		{
-			RestrictCommand = new RelayCommand(o => RequestMemberMute(), o => !(RestrictionDate == DateTime.MinValue && RestrictionDate > DateTime.Now));
+			RestrictCommand = new RelayCommand(o => RequestMemberMute(), o => !(RestrictionDate == DateTime.MinValue && RestrictionDate > DateTime.Now && string.IsNullOrWhiteSpace(Reason)));
 		}
 
 		private void RequestMemberMute()

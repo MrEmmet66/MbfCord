@@ -20,7 +20,7 @@ namespace Client.MVVM.ViewModel
 		public ChatCreateViewModel()
 		{
 			serverConnection = ServerConnection.GetInstance();
-			CreateChatCommand = new RelayCommand(o => RequestChatCreate());
+			CreateChatCommand = new RelayCommand(o => RequestChatCreate(), o => !string.IsNullOrWhiteSpace(ChatName));
 		}
 
 		private void RequestChatCreate()

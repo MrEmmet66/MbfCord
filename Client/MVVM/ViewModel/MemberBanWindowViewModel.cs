@@ -27,7 +27,7 @@ namespace Client.MVVM.ViewModel
         {
 			ChatId = chatId;
 			target = TargetMember;
-			RestrictCommand = new RelayCommand(o => RequestMemberBan(), o => !(RestrictionDate == DateTime.MinValue && RestrictionDate > DateTime.Now));
+			RestrictCommand = new RelayCommand(o => RequestMemberBan(), o => !(RestrictionDate == DateTime.MinValue && RestrictionDate > DateTime.Now && string.IsNullOrWhiteSpace(Reason)));
 		}
 
 		private void RequestMemberBan()

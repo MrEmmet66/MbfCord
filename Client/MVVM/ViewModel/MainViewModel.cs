@@ -27,9 +27,6 @@ namespace Client.MVVM.ViewModel
     {
         ServerConnection serverConnection;
         private Chat selectedChat;
-        private Chat selectedUserChat;
-        private ChatMemberClientModel selectedMember;
-        private ChatRoleClientModel selectedRole;
         public RelayCommand SendMessageCommand { get; set; }
         public RelayCommand LeaveChatCommand { get; set; }
         public RelayCommand KickMemberCommand { get; set; }
@@ -83,7 +80,7 @@ namespace Client.MVVM.ViewModel
             ChatMembers = new ObservableCollection<ChatMemberClientModel>();
 			ChatRoles = new ObservableCollection<ChatRoleClientModel>();
 
-			SendMessageCommand = new RelayCommand(o => SendChatMessage(Message));
+			SendMessageCommand = new RelayCommand(o => SendChatMessage((string)o));
             LeaveChatCommand = new RelayCommand(o => RequestChatLeave(SelectedChat.Id));
             KickMemberCommand = new RelayCommand(o => RequestMemberKick());
             OpenChatsWindowCommand = new RelayCommand(o => new ChatsWindow().ShowDialog());
@@ -172,7 +169,7 @@ namespace Client.MVVM.ViewModel
 		private void OnChatUpdate(object? sender, ChatUpdateEventArgs e)
 		{
             int index = UserChats.IndexOf(UserChats.FirstOrDefault(c => c.Id == e.Chat.Id));
-            Application.Current.Dispatcher.Invoke(() => UserChats[index] = new Chat(e.Chat.Name, e.Chat.Description));
+            Application.Current.Dispatcher.Invoke(() => UserChats[index] = new Chat(e.Chat));
 		}
 
 		private void OnChatRemove(object? sender, ChatEventArgs e)
@@ -251,7 +248,7 @@ namespace Client.MVVM.ViewModel
                 Chat chat = UserChats.FirstOrDefault(c => c.Id == e.ChatId);
 				if (e.MemberId == ClientInfo.Id)
                 {
-					if (SelectedChat.Id == e.ChatId)
+					if (SelectedChat?.Id == e.ChatId)
 						ChatMembers.Clear();
 					UserChats.Remove(chat);
                 }

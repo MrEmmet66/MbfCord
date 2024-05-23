@@ -49,6 +49,15 @@ namespace Server.Handler.Roles
 				sender.SendPacket(new EditRoleResponseServerPacket(false, "You don't have permission to edit this role"));
 				return;
 			}
+			var roles = await roleRepository.GetAllAsync();
+			foreach(var checkRole in roles)
+			{
+				if (checkRole.Name == packet.RoleModel.Name && checkRole.Chat.Id == role.Chat.Id && checkRole.Id != role.Id)
+				{
+					sender.SendPacket(new EditRoleResponseServerPacket(false, "Role with this name already exists"));
+					return;
+				}
+			}
 			if(role.IsOwner)
 			{
 				sender.SendPacket(new EditRoleResponseServerPacket(false, "Editing owner role is not allowed"));
@@ -77,5 +86,7 @@ namespace Server.Handler.Roles
 		{
 			return name != null && name.Length > 0 && name.Length <= 50 && name != "Member" && name != "Owner";
 		}
+
+
 	}
 }

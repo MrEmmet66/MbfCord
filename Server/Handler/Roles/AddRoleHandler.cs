@@ -32,13 +32,14 @@ namespace Server.Handler.Roles
 					await nextHandler.HandlePacketAsync(clientPacket);
 				return;
 			}
+			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			ChatRoleClientModel roleModel = packet.RoleModel;
-			if(roleRepository.GetByName(roleModel.Name) != null)
+			Role checkRole = roleRepository.GetByName(roleModel.Name);
+			if(checkRole != null && checkRole.Chat.Id == chat.Id)
 			{
 				sender.SendPacket(new AddRoleResponseServerPacket(false, "Role with this name already exists"));
 				return;
 			}
-			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			if (chat == null)
 			{
 				sender.SendPacket(new AddRoleResponseServerPacket(false, "Chat not found"));
