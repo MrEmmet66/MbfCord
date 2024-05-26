@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.S2C.Roles
 {
-	public class ChatRolesResponseServerPacket : BaseServerPacket
+	public class ChatRolesResultServerPacket : BaseServerPacket
 	{
 		public List<ChatRoleClientModel> Roles { get; set; }
-		public ChatRolesResponseServerPacket(List<ChatRoleClientModel> roles) : base(PacketType.ChatRolesResponse)
+		public ChatRolesResultServerPacket(List<ChatRoleClientModel> roles) : base(PacketType.ChatRolesResponse)
 		{
 			Roles = roles;
 		}

@@ -8,6 +8,9 @@ namespace Infrastructure.S2C
 {
 	public class BaseResponseServerPacket : BaseServerPacket, IResponsePacket
 	{
+		public BaseResponseServerPacket() : base(PacketType.LoginRequest)
+		{
+		}
 		public BaseResponseServerPacket(PacketType type, bool status, string message) : base(type)
 		{
 			Status = status;

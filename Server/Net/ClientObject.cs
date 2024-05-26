@@ -27,7 +27,6 @@ namespace Server.Net
 
         public string Id = Guid.NewGuid().ToString();
         public User User { get; set; }
-        public string Name { get; set; }
         public BinaryReader Reader { get; set; }
         public BinaryWriter Writer { get; set; }
         public TcpClient ClientSocket { get; set; }

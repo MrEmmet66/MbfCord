@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Server.Db.ApplicationContext" Collapsed="true">
-    <Position X="66.25" Y="0.5" Width="1.5" />
+    <Position X="65.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAAQAAAAAAAAAAAAAAEgEAAAAAAAAAAQAAEAA=</HashCode>
       <FileName>Db\ApplicationContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Db.ChatRepository" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="69.75" Y="0.5" Width="1.5" />
+    <Position X="69.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAcCAIAAAACAAAAAAAAABAAAAKAAAAAAAgAAAAAAIIA=</HashCode>
       <FileName>Db\ChatRepository.cs</FileName>
@@ -16,15 +16,15 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Db.MemberRestrictionRepository" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="69.75" Y="1.5" Width="1.5" />
+    <Position X="69.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAcCAIAAAACAAAAIAAAABAAAAKAAAAAAAgAAQAAAIIA=</HashCode>
       <FileName>Db\MemberRestrictionRepository.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Db.MessageRepository" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="66.25" Y="2.5" Width="1.5" />
+    <Position X="65.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAcCAIAAAACAAAAAAAAABAAAAKAAAAAAAgAAAAAAIIA=</HashCode>
       <FileName>Db\MessageRepository.cs</FileName>
@@ -32,15 +32,15 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Db.RoleRepository" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="66.25" Y="3.5" Width="1.5" />
+    <Position X="65.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAcCAIAAAAAAAAAAAAAABAAAAIAAAAAAAgAAAAAAIIg=</HashCode>
       <FileName>Db\RoleRepository.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Db.UserRepository" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="66.25" Y="4.5" Width="1.5" />
+    <Position X="65.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAcAAIAAAACABAAAAAAABAAAAKAAAAAAAgAAQAAAIIg=</HashCode>
       <FileName>Db\UserRepository.cs</FileName>
@@ -48,175 +48,175 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Handler.Auth.AuthPacketHandler" Collapsed="true">
-    <Position X="18.75" Y="1.75" Width="1.5" />
+    <Position X="38.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAIAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAIIAAAAA=</HashCode>
       <FileName>Handler\Auth\AuthPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Base.BasePacketHandler" Collapsed="true">
-    <Position X="37.75" Y="0.5" Width="1.5" />
+    <Position X="37.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAABEAAA=</HashCode>
       <FileName>Handler\Base\BasePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatCreate.ChatCreatePacketHandler" Collapsed="true">
-    <Position X="43.5" Y="1.75" Width="1.5" />
+    <Position X="56.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatCreate\ChatCreatePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatJoin.ChatJoinPacketHandler" Collapsed="true">
-    <Position X="52.5" Y="1.75" Width="1.5" />
+    <Position X="11.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgABCAAAAAAAAAAAAQAIAAAACAAIAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgABAAAAAAAAAAAAAQAIAAAACAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatJoin\ChatJoinPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatMessageRequest.ChatMessageRequestHandler" Collapsed="true">
-    <Position X="59.25" Y="1.75" Width="1.5" />
+    <Position X="18.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatMessageRequest\ChatMessageRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.MemberAction.ChatMemberBanRequestHandler" Collapsed="true">
-    <Position X="12" Y="1.75" Width="1.5" />
+    <Position X="25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAAAAAYAAAACAAIAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAAAAAIAAAACAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\MemberAction\ChatMemberBanRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.MemberAction.ChatMemberKickRequestHandler" Collapsed="true">
-    <Position X="21" Y="1.75" Width="1.5" />
+    <Position X="31.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAAAAAIAACAAAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\MemberAction\ChatMemberKickRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.MemberAction.ChatMemberMuteRequestHandler" Collapsed="true">
-    <Position X="27.75" Y="1.75" Width="1.5" />
+    <Position X="40.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAAAAAIAAAACAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\MemberAction\ChatMemberMuteRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.MemberAction.ChatMemberUnbanRequestPacketHandler" Collapsed="true">
-    <Position X="34.5" Y="1.75" Width="1.5" />
+    <Position X="47.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABCAIAAAAAAAAAAAAIAAAACAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\MemberAction\ChatMemberUnbanRequestPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.MemberAction.ChatMemberUnmutePacketHandler" Collapsed="true">
-    <Position X="39" Y="1.75" Width="1.5" />
+    <Position X="52" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABCAIAAAAAAAAAAAAIAAAACAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\MemberAction\ChatMemberUnmutePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatBansRequestPacketHandler" Collapsed="true">
-    <Position X="45.75" Y="1.75" Width="1.5" />
+    <Position X="58.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AQAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAIAAAAA=</HashCode>
       <FileName>Handler\Chat\ChatBansRequestPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatEditRequestHandler" Collapsed="true">
-    <Position X="54.75" Y="1.75" Width="1.5" />
+    <Position X="13.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAQAIAAAAAAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatEditRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatLeaveHandler" Collapsed="true">
-    <Position X="61.5" Y="1.75" Width="1.5" />
+    <Position X="20.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAAAAAIAAAAAAAAAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAABCAAAAAAAAAAAAAAIAAAAAAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatLeaveHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatMembersRequestHandler" Collapsed="true">
-    <Position X="14.25" Y="1.75" Width="1.5" />
+    <Position X="27.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAACBAAAAAAAAAAAAAIAAAAAAAIAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAABAAAAAAAAAAAAAIAAAAAAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatMembersRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatRemovePacketHandler" Collapsed="true">
-    <Position X="23.25" Y="1.75" Width="1.5" />
+    <Position X="34" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAACAAAAAAAAAAAAQAIAAAAAAAIAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatRemovePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.ChatsRequestPacketHandler" Collapsed="true">
-    <Position X="30" Y="1.75" Width="1.5" />
+    <Position X="43" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAA=</HashCode>
       <FileName>Handler\Chat\ChatsRequestPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.UserChatRequestPacketHandler" Collapsed="true">
-    <Position X="36.75" Y="1.75" Width="1.5" />
+    <Position X="49.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAA=</HashCode>
       <FileName>Handler\Chat\UserChatRequestPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Chat.UsernameChangeHandler" Collapsed="true">
-    <Position X="41.25" Y="1.75" Width="1.5" />
+    <Position X="54.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAACAAAAAAAAAAAAQAIAAAAAAAIAAAAA=</HashCode>
       <FileName>Handler\Chat\UsernameChangeHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Message.MessagePacketHandler" Collapsed="true">
-    <Position X="48" Y="1.75" Width="1.5" />
+    <Position X="61" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AABAAAAAAAAAABAAAAAAAAAAAAAAAIAAAAAAAIAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAAAAAIAAAAAAAIAAQAA=</HashCode>
       <FileName>Handler\Message\MessagePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Roles.AddRoleHandler" Collapsed="true">
-    <Position X="57" Y="1.75" Width="1.5" />
+    <Position X="16" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAAAAAgAAAAAAAAAIAAAAAAAAAAQAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAIAAAAAAAAAAQAA=</HashCode>
       <FileName>Handler\Roles\AddRoleHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Roles.AssignRolePacketHandler" Collapsed="true">
-    <Position X="63.75" Y="1.75" Width="1.5" />
+    <Position X="22.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAACAAAAAAAAAAAAQAIAAAAAAAIAAAAA=</HashCode>
       <FileName>Handler\Roles\AssignRolePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Roles.ChatRolesRequestHandler" Collapsed="true">
-    <Position X="16.5" Y="1.75" Width="1.5" />
+    <Position X="29.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAgAAAIAAAAAAAAAAAAA=</HashCode>
       <FileName>Handler\Roles\ChatRolesRequestHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Roles.EditRolePacketHandler" Collapsed="true">
-    <Position X="25.5" Y="1.75" Width="1.5" />
+    <Position X="36.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAQAIAAAAAAAIAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAACgAAAAAAAAAAAAAAAQAIAAAAAAAIAAAAA=</HashCode>
       <FileName>Handler\Roles\EditRolePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Roles.RoleRemovePacketHandler" Collapsed="true">
-    <Position X="32.25" Y="1.75" Width="1.5" />
+    <Position X="45.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAACAAAAAAAAAAEAQAIAAAAAAAIAAAAA=</HashCode>
       <FileName>Handler\Roles\RoleRemovePacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.Util.PacketHandlerFactory" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="69.75" Y="2.5" Width="1.5" />
+    <Position X="69.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Handler\Util\PacketHandlerFactory.cs</FileName>
@@ -224,14 +224,14 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Handler.ClientInfoRequestPacketHandler" Collapsed="true">
-    <Position X="50.25" Y="1.75" Width="1.5" />
+    <Position X="63.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
       <FileName>Handler\ClientInfoRequestPacketHandler.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Handler.ClientPacketListener" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="66.25" Y="1.5" Width="1.5" />
+    <Position X="65.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAQBAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Handler\ClientPacketListener.cs</FileName>
@@ -239,7 +239,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Chat.Channel" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="68" Y="0.5" Width="1.5" />
+    <Position X="67.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAgAAAAAAAAAAQAAgAAAAAAAAAEAQAAAAA=</HashCode>
       <FileName>Models\Channel.cs</FileName>
@@ -247,7 +247,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Chat.MemberRestriction" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="68" Y="1.5" Width="1.5" />
+    <Position X="67.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAGAAAAAAAAAAAgAAAAgAACEAAIAQgAQAAAAAAQAAA=</HashCode>
       <FileName>Models\MemberRestriction.cs</FileName>
@@ -255,7 +255,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Chat.Message" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="73.25" Y="1.5" Width="1.5" />
+    <Position X="72.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAACgAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAA=</HashCode>
       <FileName>Models\Message.cs</FileName>
@@ -263,7 +263,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Chat.Role" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="73.25" Y="2.5" Width="1.5" />
+    <Position X="72.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACgCAAAAAAAAACAAAAIAwAAAAAAAgAAAAAAgABAAA=</HashCode>
       <FileName>Models\Role.cs</FileName>
@@ -271,7 +271,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Chat.User" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="73.25" Y="3.5" Width="1.5" />
+    <Position X="72.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAQAAAAAgAgEAAAAAAAAIARAAEAA=</HashCode>
       <FileName>Models\User.cs</FileName>
@@ -279,84 +279,119 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="Server.Net.ClientObject" Collapsed="true">
-    <Position X="73.25" Y="0.5" Width="1.5" />
+    <Position X="72.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQTAAAAAAAAAAAAAAAAAAQAAAAAAABAABAAABEAAAA=</HashCode>
       <FileName>Net\ClientObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Net.ServerObject" Collapsed="true">
-    <Position X="71.5" Y="3.5" Width="1.5" />
+    <Position X="71" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAQACAAAAAAAABAAAAgQAACEAAAAAA=</HashCode>
       <FileName>Net\ServerObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Services.ChatService" Collapsed="true">
-    <Position X="71.5" Y="0.5" Width="1.5" />
+    <Position X="71" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
       <FileName>Services\ChatService.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Server.Services.MemberRestrictionService" Collapsed="true">
+    <Position X="71" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAABIAAwAAAAAAAAAAAAAAQBAAIAAAIIAAAA=</HashCode>
+      <FileName>Services\MemberRestrictionService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="Server.Services.MessageService" Collapsed="true">
-    <Position X="68" Y="2.5" Width="1.5" />
+    <Position X="67.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAAAAAAAAAAAIAAAAAAAAAAIAAAAAAAAAAAIAIQAA=</HashCode>
       <FileName>Services\MessageService.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Services.RoleService" Collapsed="true">
-    <Position X="68" Y="3.5" Width="1.5" />
+    <Position X="67.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QAAAAAAAAAAgAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAgAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Services\RoleService.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Services.SecurityService" Collapsed="true">
-    <Position X="69.75" Y="3.5" Width="1.5" />
+    <Position X="69.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAgAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Services\SecurityService.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Services.UserService" Collapsed="true">
-    <Position X="68" Y="4.5" Width="1.5" />
+    <Position X="67.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAACAAAAgAAIAAABAAAAAAAAAAAAACAAAAIAAQAA=</HashCode>
       <FileName>Services\UserService.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Server.Program" Collapsed="true">
-    <Position X="71.5" Y="2.5" Width="1.5" />
+    <Position X="71" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Interface Name="Server.Db.IChatRepository" Collapsed="true">
+    <Position X="65.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAcAAIAAAACAAAAAAAAABAAAAKAAAAAAAgAAAAAAIIA=</HashCode>
+      <FileName>Db\ChatRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Interface Name="Server.Db.IEntity" Collapsed="true">
-    <Position X="66.25" Y="5.75" Width="1.5" />
+    <Position X="67.5" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Db\IEntity.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="Server.Db.IMemberRestrictionRepository" Collapsed="true">
+    <Position X="69.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAcAAIAAAAAAAAAAAAAABAAAAKAAAAAAAgAAAAAAIIA=</HashCode>
+      <FileName>Db\MemberRestrictionRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Server.Db.IMessageRepository" Collapsed="true">
+    <Position X="71" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAcAAIAAAACAAAAAAAAABAAAAKAAAAAAAgAAAAAAIIA=</HashCode>
+      <FileName>Db\MessageRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="Server.Db.IRoleRepository" Collapsed="true">
+    <Position X="67.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAcAAIAAAAAAAAAAAAAAAAAAAIAAAAAAAgAAAAAAAIg=</HashCode>
+      <FileName>Db\RoleRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Interface Name="Server.Db.IUserRepository" Collapsed="true">
-    <Position X="66.25" Y="6.5" Width="1.5" />
+    <Position X="69.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAcAAIAAAACAAAAAAAAABAAAAKAAAAAAAgAAAAAAIIg=</HashCode>
       <FileName>Db\UserRepository.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Server.Handler.Base.IPacketListener" Collapsed="true">
-    <Position X="69.75" Y="5.75" Width="1.5" />
+    <Position X="65.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Handler\Base\IPacketListener.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Server.Handler.Util.IPacketHandlerFactory" Collapsed="true">
-    <Position X="68" Y="5.75" Width="1.5" />
+    <Position X="72.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Handler\Util\PacketHandlerFactory.cs</FileName>

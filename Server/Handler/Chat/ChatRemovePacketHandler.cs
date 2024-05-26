@@ -1,5 +1,7 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Chat;
+using Infrastructure.S2C;
 using Infrastructure.S2C.Chat;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
@@ -44,14 +46,14 @@ namespace Server.Handler.Chat
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
 			if (chat == null)
 			{
-				sender.SendPacket(new ChatRemoveResponseServerPacket(false, "Chat not found"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatRemoveResponse, false, "Chat not found"));
 				return;
 			}
 			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
 			Role userRole = userService.GetUserRole(user, chat);
 			if (!userRole.IsOwner)
 			{
-				sender.SendPacket(new ChatRemoveResponseServerPacket(false, "You don't have permission to remove this chat"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatRemoveResponse, false, "You don't have permission to remove this chat"));
 				return;
 			}
 			foreach(Role role in chat.Roles)
@@ -60,7 +62,7 @@ namespace Server.Handler.Chat
 			}
 			chatRepository.Remove(chat.Id);
 			await chatRepository.SaveAsync();
-			sender.SendPacket(new ChatRemoveResponseServerPacket(true, "Chat removed successfully"));
+			sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatRemoveResponse, true, "Chat removed successfully"));
 			ChatRemovedServerPacket chatRemovedPacket = new ChatRemovedServerPacket(chat.Id);
 			chatService.SendPacketToClientsInChat(chat, chatRemovedPacket);
 		}

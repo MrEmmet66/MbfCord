@@ -45,7 +45,7 @@ namespace Server.Handler.Roles
 				CanMute = r.CanMute,
 				IsOwner = r.IsOwner
 			}).ToList();
-			ChatRolesResponseServerPacket response = new ChatRolesResponseServerPacket(rolesModel);
+			ChatRolesResultServerPacket response = new ChatRolesResultServerPacket(rolesModel);
 			sender.SendPacket(response);
 		}
 

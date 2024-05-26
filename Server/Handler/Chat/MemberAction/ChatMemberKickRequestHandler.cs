@@ -1,8 +1,7 @@
 ﻿using Infrastructure;
 using Infrastructure.C2S;
 using Infrastructure.C2S.MemberAction;
-using Infrastructure.S2C.Chat;
-using Infrastructure.S2C.MemberAction;
+using Infrastructure.S2C;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
 using Server.Db;
@@ -54,23 +53,23 @@ namespace Server.Handler.Chat.MemberAction
 				{
 					if (targetRole.IsOwner)
 					{
-						sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "You can't kick the owner"));
+						sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberKickResult, false, "You can't kick the owner"));
 						return;
 					}
 					await userService.KickUserAsync(chat, targetUser);
 					messageService.AddSystemMessage($"{targetUser.Username} was kicked by {user.Username}", chat);
 
-					sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, targetUser.Id, true, "User kicked"));
+					sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberKickResult, true, "User kicked"));
 
 				}
 				else
 				{
-					sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "User not found"));
+					sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberKickResult, false, "User not found"));
 				}
 			}
 			else
 			{
-				sender.SendPacket(new ChatMemberKickResponseServerPacket(packet.ChatId, packet.UserId, false, "You don't have permission to kick"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberKickResult, false, "You don't have permission to kick"));
 			}
 		}
 		private Role GetUserRole(User user, Channel chat)

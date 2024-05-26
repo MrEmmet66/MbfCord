@@ -1,21 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Client.MemberActionWindows.MemberMuteWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="31" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MemberActionWindows\MemberMuteWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Client.MemberActionWindows.RoleAssignWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="31" Y="4.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MemberActionWindows\RoleAssignWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Class Name="Client.MVVM.Core.BaseViewModel" Collapsed="true">
     <Position X="13.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -37,13 +21,6 @@
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>MVVM\Model\Chat.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Client.MVVM.Model.ChatMember" Collapsed="true">
-    <Position X="25.75" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MVVM\Model\ChatMember.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Client.MVVM.Model.ClientInfo" Collapsed="true">
@@ -82,16 +59,16 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Client.MVVM.ViewModel.LoginViewModel" Collapsed="true">
-    <Position X="24" Y="3.5" Width="1.5" />
+    <Position X="13.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CAAAAAAAACAAAQAAAQAAAAAAAAAAAAACAAAgAAgAAAA=</HashCode>
+      <HashCode>CAAAAAAEACAAAAAABQAAAAAAAAAAAAACAAAgAAgAAAA=</HashCode>
       <FileName>MVVM\ViewModel\LoginViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Client.MVVM.ViewModel.MainViewModel" Collapsed="true">
     <Position X="21.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>I4EiAAIABBAVCFYAEiAFAJQABTDBgAQQUAAkIEAgFgA=</HashCode>
+      <HashCode>I4GiAAYERBAVCFYAEiAEAJQABTDFgAQAUAAkIEAgEgE=</HashCode>
       <FileName>MVVM\ViewModel\MainViewModel.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -140,7 +117,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Client.Net.Event.ChatBansEventArgs" Collapsed="true">
-    <Position X="31" Y="0.5" Width="1.5" />
+    <Position X="31" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Net\Event\ChatBansEventArgs.cs</FileName>
@@ -210,21 +187,21 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Client.Net.Event.MessageEventArgs" Collapsed="true">
-    <Position X="34.5" Y="3.5" Width="1.5" />
+    <Position X="34.5" Y="3.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AQAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
       <FileName>Net\Event\MessageEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Client.Net.Event.NewChatEventArgs" Collapsed="true">
-    <Position X="24" Y="4.5" Width="1.5" />
+    <Position X="24.25" Y="3.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>Net\Event\NewChatEventArgs.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Client.Net.Event.NewMemberEventArgs" Collapsed="true">
-    <Position X="25.75" Y="4.5" Width="1.5" />
+    <Position X="26" Y="4.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAQ=</HashCode>
       <FileName>Net\Event\NewMemberEventArgs.cs</FileName>
@@ -254,7 +231,7 @@
   <Class Name="Client.Net.ServerConnection" Collapsed="true">
     <Position X="34.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIGYAFEFUAAAMQEQBAQCAhAARAFECAQAsFAABEGAAAE=</HashCode>
+      <HashCode>AIEYAFEBUAAAMQEQACQCAhAARAFACAQAsFAABEEAAAA=</HashCode>
       <FileName>Net\ServerConnection.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -266,7 +243,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Client.UserControls.LabeledToggleButton" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="34.5" Y="2.5" Width="1.5" />
+    <Position X="34.5" Y="2.5" Width="2" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAECAAAAAAAAgAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>UserControls\LabeledToggleButton.xaml.cs</FileName>
@@ -280,46 +257,6 @@
       <FileName>App.xaml.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Client.ChatCreateWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="32.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ChatCreateWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Client.ChatSettingsWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="24" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ChatSettingsWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Client.ChatsWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="27.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>ChatsWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Client.LoginWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="25.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAA=</HashCode>
-      <FileName>LoginWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
-  <Class Name="Client.MainWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="27.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAACAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>MainWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Class Name="Client.MemberBanWindow" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="29.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
@@ -328,16 +265,8 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Client.RegisterWindow" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="27.5" Y="4.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>RegisterWindow.xaml.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
-  </Class>
   <Interface Name="Client.MVVM.Core.IMemberRestrictionViewModel" Collapsed="true">
-    <Position X="24" Y="6.75" Width="1.5" />
+    <Position X="24" Y="6.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAkQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>MVVM\Core\IMemberRestrictionViewModel.cs</FileName>

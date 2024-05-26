@@ -37,7 +37,6 @@ namespace Server.Services
 						encryptedBytes = msEncrypt.ToArray();
 					}
 				}
-
 				return Convert.ToBase64String(encryptedBytes);
 			}
 		}
@@ -63,7 +62,6 @@ namespace Server.Services
 						}
 					}
 				}
-
 				return decryptedPassword;
 			}
 		}

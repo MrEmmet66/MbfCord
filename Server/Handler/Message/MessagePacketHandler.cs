@@ -16,7 +16,6 @@ namespace Server.Handler.Message
 {
     internal class MessagePacketHandler : BasePacketHandler
 	{
-		private readonly MessageRepository messageRepository;
 		private readonly ChatRepository chatRepository;
 		private readonly MessageService messageService;
 		private readonly MemberRestrictionService memberService;
@@ -24,7 +23,6 @@ namespace Server.Handler.Message
 		public MessagePacketHandler(ClientObject sender) : base(sender)
 		{
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
-			messageRepository = Program.ServiceProvider.GetRequiredService<MessageRepository>();
 			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
 			memberService = Program.ServiceProvider.GetRequiredService<MemberRestrictionService>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
@@ -39,7 +37,7 @@ namespace Server.Handler.Message
 				return;
 			}
 			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
-			if (await memberService.IsUserMutedAsync(user))
+			if (await memberService.IsUserMutedAsync(user, packet.ChatId))
 			{
 				MessageServerPacket responsePacket = new MessageServerPacket(0, "", DateTime.Now, "", 0, false);
 				responsePacket.Message = "You are muted";
@@ -49,7 +47,6 @@ namespace Server.Handler.Message
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
 			Server.Chat.Message message = new Server.Chat.Message(sender.User, DateTime.Now, chat, packet.MessageContent);
 			messageService.AddChatMessage(message);
-			Console.WriteLine("Message handled");
 		}
 	}
 }

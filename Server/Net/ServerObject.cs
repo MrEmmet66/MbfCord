@@ -59,7 +59,7 @@ namespace Server.Net
             }
         }
 
-		internal ClientObject GetClientObjectByUserId(int id)
+		public ClientObject GetClientObjectByUserId(int id)
 		{
 			return Clients.FirstOrDefault(c => c.User.Id == id);
 		}

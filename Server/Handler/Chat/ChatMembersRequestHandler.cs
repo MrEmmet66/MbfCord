@@ -22,13 +22,11 @@ namespace Server.Handler.Chat
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly IUserRepository userRepository;
-		private readonly UserService userService;
 
 		public ChatMembersRequestHandler(ClientObject sender) : base(sender)
 		{
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
-			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 		}
 
 		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)

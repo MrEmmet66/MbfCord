@@ -1,7 +1,7 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.MemberAction;
-using Infrastructure.S2C.MemberAction;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Infrastructure.S2C;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
 using Server.Db;
@@ -47,7 +47,7 @@ namespace Server.Handler.Chat.MemberAction
 			Role role = userService.GetUserRole(user, chat);
 			if (!(role.CanMute || role.IsOwner))
 			{
-				sender.SendPacket(new ChatMemberMuteResponseServerPacket(packet.ChatId, packet.UserId, false, "You don't have permission to mute users"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberMuteResponse, false, "You don't have permission to mute users"));
 				return;
 			}
 
@@ -56,22 +56,22 @@ namespace Server.Handler.Chat.MemberAction
 
 			if (targetRole.IsOwner)
 			{
-				sender.SendPacket(new ChatMemberMuteResponseServerPacket(packet.ChatId, packet.UserId, false, "You can't mute the owner"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberMuteResponse, false, "You can't mute the owner"));
 				return;
 			}
 			if (targetRole == null)
 			{
-				sender.SendPacket(new ChatMemberMuteResponseServerPacket(packet.ChatId, packet.UserId, false, "User not found"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberMuteResponse, false, "User not found"));
 				return;
 			}
-			if(await memberRestrictionService.IsUserMutedAsync(targetUser))
+			if(await memberRestrictionService.IsUserMutedAsync(targetUser, chat.Id))
 			{
-				sender.SendPacket(new ChatMemberMuteResponseServerPacket(packet.ChatId, packet.UserId, false, "User is already muted"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberMuteResponse, false, "User is already muted"));
 				return;
 			}
-			if(memberRestrictionService.IsUserBanned(targetUser))
+			if(memberRestrictionService.IsUserBanned(targetUser, chat.Id))
 			{
-				sender.SendPacket(new ChatMemberMuteResponseServerPacket(chat.Id, packet.UserId, false, "User is banned"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberMuteResponse, false, "User is banned"));
 				return;
 			}
 

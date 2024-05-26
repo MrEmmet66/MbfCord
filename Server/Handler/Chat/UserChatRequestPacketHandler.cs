@@ -37,7 +37,6 @@ namespace Server.Handler.Chat
 					userChannels.Add(new ChatClientModel(channel.Id, channel.Name, channel.Description));
 				}
             }
-            string channelsJson = JsonConvert.SerializeObject(userChannels);
             UserChatsResultServerPacket userChatsResult = new UserChatsResultServerPacket(userChannels);
             sender.SendPacket(userChatsResult);
         }

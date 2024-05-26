@@ -56,7 +56,7 @@ namespace Server.Handler.Chat.MemberAction
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberUnbanResponse, false, "User not found"));
 				return;
 			}
-			bool isUserBanned = memberRestrictionService.IsUserBanned(targetUser);
+			bool isUserBanned = memberRestrictionService.IsUserBanned(targetUser, chat.Id);
 			if (!isUserBanned)
 			{
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberUnbanResponse, false, "User is not banned"));

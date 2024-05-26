@@ -1,5 +1,7 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Role;
+using Infrastructure.S2C;
 using Infrastructure.S2C.Model;
 using Infrastructure.S2C.Roles;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,12 +17,10 @@ namespace Server.Handler.Roles
 	{
 		private readonly ChatRepository chatRepository;
 		private readonly RoleRepository roleRepository;
-		private readonly RoleService roleService;
 
 		public AddRoleHandler(ClientObject sender) : base(sender)
 		{
 			roleRepository = Program.ServiceProvider.GetRequiredService<RoleRepository>();
-			roleService = Program.ServiceProvider.GetRequiredService<RoleService>();
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 		}
 
@@ -37,12 +37,12 @@ namespace Server.Handler.Roles
 			Role checkRole = roleRepository.GetByName(roleModel.Name);
 			if(checkRole != null && checkRole.Chat.Id == chat.Id)
 			{
-				sender.SendPacket(new AddRoleResponseServerPacket(false, "Role with this name already exists"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAddResponse, false, "Role with this name already exists"));
 				return;
 			}
 			if (chat == null)
 			{
-				sender.SendPacket(new AddRoleResponseServerPacket(false, "Chat not found"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAddResponse, false, "Chat not found"));
 				return;
 			}
 

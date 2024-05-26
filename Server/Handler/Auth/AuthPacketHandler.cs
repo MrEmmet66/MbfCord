@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Infrastructure.C2S;
 using Server.Services;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Infrastructure.S2C;
 
 namespace Server.Handler.Auth
 {
@@ -50,7 +51,7 @@ namespace Server.Handler.Auth
 				case PacketType.LoginRequest:
 					if (user == null)
 					{
-						AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.LoginResult, false, "User with this login not found");
+						BaseResponseServerPacket authResponse = new BaseResponseServerPacket(PacketType.LoginResult, false, "User with this login not found");
 						string json = authResponse.Serialize();
 						sender.SendPacket(PacketType.LoginResult, json);
 
@@ -59,14 +60,14 @@ namespace Server.Handler.Auth
 					{
 						if (user.HashedPassword != hashedPassword)
 						{
-							AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.LoginResult, false, "Wrong password");
+							BaseResponseServerPacket authResponse = new BaseResponseServerPacket(PacketType.LoginResult, false, "Wrong password");
 							string json = authResponse.Serialize();
 							sender.SendPacket(PacketType.LoginResult, json);
 						}
 						else
 						{
 							ServerObject.Instance.Clients.Find(c => c == sender).User = user;
-							AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.LoginResult, true, "Login success");
+							BaseResponseServerPacket authResponse = new BaseResponseServerPacket(PacketType.LoginResult, true, "Login success");
 							string json = authResponse.Serialize();
 							sender.SendPacket(PacketType.LoginResult, json);
 						}
@@ -76,7 +77,7 @@ namespace Server.Handler.Auth
 					Console.WriteLine("New register request");
 					if (user != null)
 					{
-						AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.RegisterResult, false, "User with this name already exists");
+						BaseResponseServerPacket authResponse = new BaseResponseServerPacket(PacketType.RegisterResult, false, "User with this name already exists");
 						string json = JsonConvert.SerializeObject(authResponse);
 						sender.SendPacket(PacketType.RegisterResult, json);
 					}
@@ -84,7 +85,7 @@ namespace Server.Handler.Auth
 					{
 						userRepository.Add(new User(username, hashedPassword));
                         await userRepository.SaveAsync();
-						AuthResponseServerPacket authResponse = new AuthResponseServerPacket(PacketType.RegisterResult, true, "User registered succesfully");
+						BaseResponseServerPacket authResponse = new BaseResponseServerPacket(PacketType.RegisterResult, true, "User registered succesfully");
 						string json = JsonConvert.SerializeObject(authResponse);
 						sender.SendPacket(PacketType.RegisterResult, json);
 					}

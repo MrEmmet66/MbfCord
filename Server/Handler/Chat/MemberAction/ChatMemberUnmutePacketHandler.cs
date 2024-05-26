@@ -43,27 +43,34 @@ namespace Server.Handler.Chat.MemberAction
 					await nextHandler.HandlePacketAsync(clientPacket);
 				return;
 			}
+
 			User user = await userRepository.GetByIdAsync(sender.User.Id);
 			Channel chat = await chatRepository.GetByIdWithIncludesAsync(packet.ChatId);
 			Role role = userService.GetUserRole(user, chat);
+
 			if (!(role.CanMute || role.IsOwner))
 			{
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberUnmuteResponse, false, "You don't have permission to unmute users"));
 				return;
 			}
+
 			User targetUser = await userRepository.GetByIdAsync(packet.UserId);
+
 			if(targetUser == null)
 			{
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberUnmuteResponse, false, "User not found"));
 				return;
 			}
-			bool isUserMuted = await memberRestrictionService.IsUserMutedAsync(targetUser);
+
+			bool isUserMuted = await memberRestrictionService.IsUserMutedAsync(targetUser, chat.Id);
 			MemberRestriction targetRestriction = await memberRestrictionService.GetUserRestrictionAsync(targetUser, chat);
+
 			if (!isUserMuted || targetRestriction == null)
 			{
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberUnmuteResponse, false, "User isn't muted"));
 				return;
 			}
+
 			restrictionRepository.Remove(targetRestriction.Id);
 			await restrictionRepository.SaveAsync();
 			sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberUnmuteResponse, true, "User unmuted"));

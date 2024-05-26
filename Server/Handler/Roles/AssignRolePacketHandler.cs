@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Role;
 using Infrastructure.S2C;
 using Infrastructure.S2C.Model;
@@ -44,7 +45,7 @@ namespace Server.Handler.Roles
 			Role role = await roleRepository.GetByIdAsync(packet.RoleId);
 			if (role == null)
 			{
-				sender.SendPacket(new RoleAssignResponseServerPacket(false, "Role not found"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "Role not found"));
 				return;
 			}
 			User user = await userRepository.GetByIdAsync(sender.User.Id);
@@ -53,23 +54,23 @@ namespace Server.Handler.Roles
 			Role userRole = user.Roles.FirstOrDefault(r => r.Chat.Id == role.Chat.Id);
 			if (!userRole.CanSetRole || role.IsOwner)
 			{
-				sender.SendPacket(new RoleAssignResponseServerPacket(false, "You don't have permission to assign this role"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "You don't have permission to assign this role"));
 				return;
 			}
-			if(role.Id == 1)
+			if(role.IsOwner)
 			{
-				sender.SendPacket(new RoleAssignResponseServerPacket(false, "You can't assign this role"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "You can't assign this role"));
 				return;
 			}
 
 			Role targetUserRole = targetUser.Roles.FirstOrDefault(r => r.Chat.Id == role.Chat.Id);
 			if(targetUserRole.IsOwner)
 			{
-				sender.SendPacket(new RoleAssignResponseServerPacket(false, "You can't assign this role to this user"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "You can't assign this role to this user"));
 				return;
 			}
 			userService.SetUserRole(targetUser, role);
-			sender.SendPacket(new RoleAssignResponseServerPacket(true, "Role assigned"));
+			sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, true, "Role assigned"));
 			ChatRoleClientModel assignedRoleModel = new ChatRoleClientModel(role.Id, role.Name, role.CanSendMessage, role.CanKick, role.CanSetRole, role.CanBan, role.CanMute);
 			ChatMemberClientModel updatedMember = new ChatMemberClientModel(targetUser.Id, targetUser.Username, assignedRoleModel);
 			ChatMemberUpdateServerPacket memberUpdatedPacket = new ChatMemberUpdateServerPacket(updatedMember, role.Chat.Id);

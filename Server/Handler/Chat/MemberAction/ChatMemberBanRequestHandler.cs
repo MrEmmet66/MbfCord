@@ -1,6 +1,7 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.MemberAction;
-using Infrastructure.S2C.MemberAction;
+using Infrastructure.S2C;
 using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
 using Server.Db;
@@ -19,7 +20,6 @@ namespace Server.Handler.Chat.MemberAction
 	{
 		private readonly MemberRestrictionService memberRestrictionService;
 		private readonly UserService userService;
-		private readonly MemberRestrictionRepository memberRestrictionRepository;
 		private readonly IUserRepository userRepository;
 		private readonly ChatRepository chatRepository;
 		private readonly MessageService messageService;
@@ -28,7 +28,6 @@ namespace Server.Handler.Chat.MemberAction
 		{
 			memberRestrictionService = Program.ServiceProvider.GetRequiredService<MemberRestrictionService>();
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
-			memberRestrictionRepository = Program.ServiceProvider.GetRequiredService<MemberRestrictionRepository>();
 			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
@@ -47,7 +46,7 @@ namespace Server.Handler.Chat.MemberAction
 			Role role = userService.GetUserRole(user, chat);
 			if (!(role.CanBan || role.IsOwner))
 			{
-				sender.SendPacket(new ChatMemberBanResponseServerPacket(false, "You don't have permission to ban users"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberBanResponse, false, "You don't have permission to ban users"));
 				return;
 			}
 
@@ -56,13 +55,13 @@ namespace Server.Handler.Chat.MemberAction
 
 			if (targetRole.IsOwner)
 			{
-				sender.SendPacket(new ChatMemberBanResponseServerPacket(false, "You can't ban the owner of the chat"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberBanResponse, false, "You can't ban the owner of the chat"));
 				return;
 			}
 			await memberRestrictionService.BanUserAsync(chat, targetUser, packet.BanTime, packet.Reason, user);
 			await userService.KickUserAsync(chat, targetUser);
 			messageService.AddSystemMessage($"{targetUser.Username} was banned by {user.Username} for {packet.Reason}, until {packet.BanTime.ToShortDateString()}", chat);
-			sender.SendPacket(new ChatMemberBanResponseServerPacket(true, "User has been banned"));
+			sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatMemberBanResponse, true, "User has been banned"));
 		}
 	}
 }

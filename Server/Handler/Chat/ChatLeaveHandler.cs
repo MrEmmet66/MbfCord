@@ -22,12 +22,14 @@ namespace Server.Handler.Chat
 		private readonly ChatRepository chatRepository;
 		private readonly UserService userService;
 		private readonly MessageService messageService;
+		private readonly IUserRepository userRepository;
 
 		public ChatLeaveHandler(ClientObject sender) : base(sender)
 		{
 			chatRepository = Program.ServiceProvider.GetRequiredService<ChatRepository>();
 			userService = Program.ServiceProvider.GetRequiredService<UserService>();
 			messageService = Program.ServiceProvider.GetRequiredService<MessageService>();
+			userRepository = Program.ServiceProvider.GetRequiredService<IUserRepository>();
 		}
 
 		public override async Task HandlePacketAsync(BaseClientPacket clientPacket)
@@ -39,7 +41,7 @@ namespace Server.Handler.Chat
 				return;
 			}
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
-			User user = sender.User;
+			User user = await userRepository.GetByIdAsync(sender.User.Id);
 			await userService.KickUserAsync(chat, user);
 			ChatLeaveResponseServerPacket chatLeaveResponseServerPacket = new ChatLeaveResponseServerPacket(packet.ChatId, true);
 			sender.SendPacket(PacketType.ChatLeaveResult, chatLeaveResponseServerPacket.Serialize());

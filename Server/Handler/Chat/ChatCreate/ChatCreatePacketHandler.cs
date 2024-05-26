@@ -11,6 +11,8 @@ using Infrastructure;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Infrastructure.C2S;
+using Infrastructure.S2C;
+using Server.Handler.Chat.ChatJoin;
 
 namespace Server.Handler.Chat.ChatCreate
 {
@@ -56,9 +58,8 @@ namespace Server.Handler.Chat.ChatCreate
 			userRepository.Update(user);
 			await chatRepository.SaveAsync();
 			NewChatServerPacket newChatServerPacket = new NewChatServerPacket(chat.Id, chat.Name, chat.Description);
-			string json = newChatServerPacket.Serialize();
-			sender.SendPacket(PacketType.NewChat, json);
-			ChatJoinResponseServerPacket chatJoinResponseServerPacket = new ChatJoinResponseServerPacket(chat.Id, true, "Chat created successfully");
+			sender.SendPacket(newChatServerPacket);
+			ChatJoinResponseServerPacket chatJoinResponseServerPacket = new ChatJoinResponseServerPacket(true, "Chat created successfully");
 			chatJoinResponseServerPacket.Chat = new Infrastructure.S2C.Model.ChatClientModel(chat.Id, chat.Name, chat.Description);
 			sender.SendPacket(chatJoinResponseServerPacket);
 		}

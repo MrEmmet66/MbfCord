@@ -1,5 +1,7 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Chat;
+using Infrastructure.S2C;
 using Infrastructure.S2C.Chat;
 using Infrastructure.S2C.Model;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,20 +43,20 @@ namespace Server.Handler.Chat
 			Channel chat = await chatRepository.GetByIdAsync(packet.ChatId);
 			if (chat == null)
 			{
-				sender.SendPacket(new ChatEditResponseServerPacket(false, "Chat not found"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatEditResponse, false, "Chat not found"));
 				return;
 			}
 			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
 			Role userRole = userService.GetUserRole(user, chat);
 			if(!userRole.IsOwner)
 			{
-				sender.SendPacket(new ChatEditResponseServerPacket(false, "You don't have permission to edit this chat"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatEditResponse, false, "You don't have permission to edit this chat"));
 			}
 			chat.Name = packet.NewName;
 			chat.Description = packet.NewDescription;
 			chatRepository.Update(chat);
 			await chatRepository.SaveAsync();
-			sender.SendPacket(new ChatEditResponseServerPacket(true, "Chat edited successfully"));
+			sender.SendPacket(new BaseResponseServerPacket(PacketType.ChatEditResponse, true, "Chat edited successfully"));
 			ChatUpdateServerPacket chatUpdatePacket = new ChatUpdateServerPacket(new ChatClientModel(chat.Id, chat.Name, chat.Description));
 			chatService.SendPacketToClientsInChat(chat, chatUpdatePacket);
 		}

@@ -1,4 +1,5 @@
-﻿using Infrastructure.C2S;
+﻿using Infrastructure;
+using Infrastructure.C2S;
 using Infrastructure.C2S.Role;
 using Infrastructure.S2C;
 using Infrastructure.S2C.Model;
@@ -43,14 +44,14 @@ namespace Server.Handler.Roles
 			Role role = await roleRepository.GetByIdAsync(packet.RoleId);
 			if (role == null)
 			{
-				sender.SendPacket(new RemoveRoleResponseServerPacket(false, "Role not found"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "Role not found"));
 				return;
 			}
 			User user = await userRepository.GetByIdWithIncludesAsync(sender.User.Id);
 			Role userRole = user.Roles.FirstOrDefault(r => r.Chat.Id == role.Chat.Id);
 			if (userRole == null || !userRole.CanSetRole || role.Id == 1 || role.Id == 2)
 			{
-				sender.SendPacket(new RemoveRoleResponseServerPacket(false, "You don't have permission to remove this role"));
+				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "You don't have permission to remove this role"));
 				return;
 			}
 			var usersWithRole = GetUsersWithRole(role);
@@ -61,7 +62,7 @@ namespace Server.Handler.Roles
 			}
 			roleRepository.Remove(role.Id);
 			await roleRepository.SaveAsync();
-			sender.SendPacket(new RemoveRoleResponseServerPacket(true, "Role removed"));
+			sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, true, "Role removed"));
 			RoleRemoveServerPacket roleRemoveServerPacket = new RoleRemoveServerPacket(role.Id, role.Chat.Id);
 			chatService.SendPacketToClientsInChat(role.Chat, roleRemoveServerPacket);
 
