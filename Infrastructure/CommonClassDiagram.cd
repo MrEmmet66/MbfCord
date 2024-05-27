@@ -1,105 +1,105 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Infrastructure.C2S.Auth.AuthClientPacket" Collapsed="true">
-    <Position X="2.25" Y="4.75" Width="1.5" />
+    <Position X="6.75" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>C2S\Auth\AuthClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Chat.BaseChatRequestClientPacket" Collapsed="true">
-    <Position X="7.75" Y="4.75" Width="1.5" />
+    <Position X="4.5" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>C2S\Chat\BaseChatRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Chat.ChatCreateClientPacket" Collapsed="true">
-    <Position X="15.75" Y="4.75" Width="1.5" />
+    <Position X="9" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\Chat\ChatCreateClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Chat.ChatEditRequestClientPacket" Collapsed="true">
-    <Position X="4.5" Y="6.25" Width="1.5" />
+    <Position X="2.75" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>C2S\Chat\ChatEditRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.MemberAction.BaseChatMemberActionClientPacket" Collapsed="true">
-    <Position X="9" Y="6.25" Width="1.5" />
+    <Position X="4.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\MemberAction\BaseChatMemberActionClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.MemberAction.ChatMemberBanRequestClientPacket" Collapsed="true">
-    <Position X="9" Y="7.75" Width="1.5" />
+    <Position X="6.25" Y="7.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAIAAAAAAAAAAAAAAgAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\MemberAction\ChatMemberBanRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.MemberAction.ChatMemberKickRequestClientPacket" Collapsed="true">
-    <Position X="11.25" Y="7.75" Width="1.5" />
+    <Position X="6.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\MemberAction\ChatMemberKickRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.MemberAction.ChatMemberMuteRequestClientPacket" Collapsed="true">
-    <Position X="6.75" Y="7.75" Width="1.5" />
+    <Position X="6.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAIAAAAAACAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\MemberAction\ChatMemberMuteRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.MemberAction.UsernameEditRequestClientPacket" Collapsed="true">
-    <Position X="13.5" Y="4.75" Width="1.5" />
+    <Position X="6.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\MemberAction\UsernameEditRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Message.MessageClientPacket" Collapsed="true">
-    <Position X="18" Y="4.75" Width="1.5" />
+    <Position X="11.25" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>C2S\Message\MessageClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Role.AddRoleRequestClientPacket" Collapsed="true">
-    <Position X="20.25" Y="4.75" Width="1.5" />
+    <Position X="13.5" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>C2S\Role\AddRoleRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Role.EditRoleRequestClientPacket" Collapsed="true">
-    <Position X="22.5" Y="4.75" Width="1.5" />
+    <Position X="15.75" Y="8.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\Role\EditRoleRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Role.RemoveRoleRequestClientPacket" Collapsed="true">
-    <Position X="24.75" Y="4.75" Width="1.5" />
+    <Position X="9" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\Role\RemoveRoleRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.Role.RoleAssignRequestClientPacket" Collapsed="true">
-    <Position X="27" Y="4.75" Width="1.5" />
+    <Position X="11.25" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>C2S\Role\RoleAssignRequestClientPacket.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Infrastructure.C2S.BaseClientPacket" Collapsed="true">
-    <Position X="14.5" Y="3.5" Width="1.5" />
+    <Position X="4.25" Y="9" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>C2S\BaseClientPacket.cs</FileName>

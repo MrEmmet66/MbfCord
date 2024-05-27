@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Server.Chat;
 using Server.Db;
 using Server.Handler.Base;
+using Server.Handler.Chat;
 using Server.Net;
 using Server.Services;
 using System;
@@ -54,17 +55,21 @@ namespace Server.Handler.Roles
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, false, "You don't have permission to remove this role"));
 				return;
 			}
+			var roles = await roleRepository.GetAllAsync();
+			Role memberRole = roles.FirstOrDefault(r => r.Name == "Member" && r.Chat.Id == role.Chat.Id);
 			var usersWithRole = GetUsersWithRole(role);
+			List<ChatMemberClientModel> updatedMembers = new List<ChatMemberClientModel>();
+			ChatRoleClientModel memberRoleModel = new ChatRoleClientModel(memberRole.Id, memberRole.Name, true, false, false, false, false);
 			foreach(var u in usersWithRole)
 			{
-				Role memberRole = roleRepository.GetById(2);
 				userService.SetUserRole(u, memberRole);
+				updatedMembers.Add(new ChatMemberClientModel(u.Id, u.Username, memberRoleModel));
 			}
 			roleRepository.Remove(role.Id);
 			await roleRepository.SaveAsync();
 			sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleAssignResponse, true, "Role removed"));
-			RoleRemoveServerPacket roleRemoveServerPacket = new RoleRemoveServerPacket(role.Id, role.Chat.Id);
-			chatService.SendPacketToClientsInChat(role.Chat, roleRemoveServerPacket);
+			ChatMembersUpdateServerPacket updatePacket = new ChatMembersUpdateServerPacket(role.Chat.Id, updatedMembers);
+			chatService.SendPacketToClientsInChat(role.Chat, updatePacket);
 
 		}
 

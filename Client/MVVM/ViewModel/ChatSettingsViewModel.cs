@@ -101,6 +101,7 @@ namespace Client.MVVM.ViewModel
 		{
 			BaseChatMemberActionClientPacket memberAction = new BaseChatMemberActionClientPacket(PacketType.ChatMemberUnbanRequest, TargetChat.Id, SelectedBannedMember.Id);
 			serverConnection.SendPacket(memberAction);
+			RequestBans();
 		}
 
 		private void OnChatBansResult(object? sender, ChatBansEventArgs e)
@@ -166,7 +167,8 @@ namespace Client.MVVM.ViewModel
 				Roles.Clear();
 				foreach (var role in e.Roles)
 				{
-					Roles.Add(role);
+					if(role.Name != "Owner")
+						Roles.Add(role);
 				}
 			});
 		}

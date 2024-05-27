@@ -63,11 +63,15 @@ namespace Server.Handler.Roles
 			if(role.IsOwner)
 			{
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleEditResponse, false, "Editing owner role is not allowed"));
+				return;
 			}
 			if(!IsValidName(packet.RoleModel.Name))
 			{
 				sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleEditResponse, false, "Invalid Name"));
+				return;
 			}
+			var usersWithRole = GetUsersWithRole(role);
+			List<ChatMemberClientModel> updatedMembers = new List<ChatMemberClientModel>();
 			role.Name = packet.RoleModel.Name;
 			role.CanSetRole = packet.RoleModel.CanSetRole;
 			role.CanKick = packet.RoleModel.CanKick;
@@ -75,17 +79,28 @@ namespace Server.Handler.Roles
 			role.CanMute = packet.RoleModel.CanMute;
 			role.CanSendMessage = packet.RoleModel.CanSendMessage;
 
+			foreach (var u in usersWithRole)
+			{
+				ChatRoleClientModel roleModel = new ChatRoleClientModel(role.Id, role.Name, role.CanSendMessage, role.CanKick, role.CanSetRole, role.CanBan, role.CanMute);
+				updatedMembers.Add(new ChatMemberClientModel(u.Id, u.Username, roleModel));
+			}
+
 			roleRepository.Update(role);
 			await roleRepository.SaveAsync();
 			sender.SendPacket(new BaseResponseServerPacket(PacketType.RoleEditResponse, true, "Role updated"));
 			ChatRoleClientModel updatedRole = new ChatRoleClientModel(role.Id, role.Name, role.CanSendMessage, role.CanKick, role.CanSetRole, role.CanBan, role.CanMute);
-			RoleUpdateServerPacket roleUpdatePacket = new RoleUpdateServerPacket(updatedRole, role.Chat.Id);
-			chatService.SendPacketToClientsInChat(role.Chat, roleUpdatePacket);
+			ChatMembersUpdateServerPacket membersUpdateServerPacket = new ChatMembersUpdateServerPacket(role.Chat.Id, updatedMembers);
+			chatService.SendPacketToClientsInChat(role.Chat, membersUpdateServerPacket);
 		}
 
 		private bool IsValidName(string name)
 		{
 			return name != null && name.Length > 0 && name.Length <= 50 && name != "Member" && name != "Owner";
+		}
+
+		private List<User> GetUsersWithRole(Role role)
+		{
+			return role.Chat.Members.Where(u => u.Roles.Any(r => r.Id == role.Id)).ToList();
 		}
 
 

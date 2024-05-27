@@ -85,10 +85,10 @@
                             <TextBlock Margin="15 0 0 0" Text="Permissions" FontSize="15" Grid.Column="0" Grid.Row="3"/>
                             <StackPanel Grid.Row="4" Grid.Column="0" Margin="10 10 0 0">
                                 <uc:LabeledToggleButton Label="Can ban" IsChecked="{Binding SelectedRole.CanBan, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <uc:LabeledToggleButton Label="Can mute" IsChecked="{Binding SelectedRole.CanMute}"/>
+                                <uc:LabeledToggleButton Label="Can mute" IsChecked="{Binding SelectedRole.CanMute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                 <uc:LabeledToggleButton Label="Can kick" IsChecked="{Binding SelectedRole.CanKick, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                <uc:LabeledToggleButton Label="Can set role" IsChecked="{Binding SelectedRole.CanSetRole}"/>
-                                <uc:LabeledToggleButton Label="Can send message" IsChecked="{Binding SelectedRole.CanSendMessage}"/>
+                                <uc:LabeledToggleButton Label="Can set role" IsChecked="{Binding SelectedRole.CanSetRole, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                <uc:LabeledToggleButton Label="Can send message" IsChecked="{Binding SelectedRole.CanSendMessage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                             </StackPanel>
                             <Button Content="Save" Command="{Binding SaveRoleCommand}" Grid.Column="0" Grid.Row="5" Margin="0 10 0 0"/>
                             <Button Content="Delete" Command="{Binding DeleteRoleCommand}" Background="#d62d2d" Grid.Column="0" Grid.Row="6" Margin="10"/>

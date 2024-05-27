@@ -102,16 +102,32 @@ namespace Client.MVVM.ViewModel
             serverConnection.ChatMemberKickResult += OnChatMemberKick;
             serverConnection.ChatMemberRemoved += OnChatMemberRemoved;
 			serverConnection.ChatMemberActionResponse += (sender, args) => MessageBox.Show(args.Message, "Result", MessageBoxButton.OK, args.Status ? MessageBoxImage.Information : MessageBoxImage.Error);
-            serverConnection.RoleUpdated += OnRoleUpdate;
-            serverConnection.RoleRemoved += OnRoleRemove;
             serverConnection.ChatMemberUpdated += OnChatMemberUpdate;
             serverConnection.ChatRemove += OnChatRemove;
             serverConnection.ChatEdit += OnChatUpdate;
+			serverConnection.ChatMembersUpdate += OnChatMembersUpdate;
 
             RequestUserChats();
             RequestUsername();
             
         }
+
+		private void OnChatMembersUpdate(object? sender, ChatMembersUpdateEventArgs e)
+		{
+			if(e.ChatId == SelectedChat?.Id)
+			{
+				foreach(var member in e.Members)
+				{
+					int index = ChatMembers.IndexOf(ChatMembers.FirstOrDefault(m => m.Id == member.Id));
+					Application.Current.Dispatcher.Invoke(() => ChatMembers[index] = member);
+					if(member.Id == ClientMember.Id)
+					{
+						ClientMember = member;
+						OnPropertyChanged(nameof(ClientMember));
+					}
+				}
+			}
+		}
 
 		private void OnClientInfoResult(object? sender, ClientInfoResultEventArgs e)
 		{
@@ -193,22 +209,22 @@ namespace Client.MVVM.ViewModel
 				OnPropertyChanged(nameof(ClientMember));
 				OnPropertyChanged(nameof(CanLeave));
 				OnPropertyChanged(nameof(EditedUsername));
-
-
 			}
 		}
 
 		private void OnRoleRemove(object? sender, ChatEventArgs e)
 		{
-            if(SelectedChat?.Id == e.ChatId)
-                RequestChatMembers(SelectedChat.Id);
+			if (e.ChatId == SelectedChat?.Id)
+			{
+				RequestChatMembers(e.ChatId);
+			}
 		}
 
 		private void OnRoleUpdate(object? sender, RoleUpdateEventArgs e)
         {
-            if(e.ChatId == SelectedChat.Id)
+            if(e.ChatId == SelectedChat?.Id)
             {
-                RequestChatMembers(e.ChatId);
+				RequestChatMembers(e.ChatId);
             }
         }
 

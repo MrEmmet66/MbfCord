@@ -10,6 +10,9 @@ namespace Infrastructure.S2C.Chat
 	public class ChatJoinResponseServerPacket : BaseResponseServerPacket
 	{
 		public ChatClientModel Chat { get; set; }
+		public ChatJoinResponseServerPacket() : base(PacketType.ChatJoinResult, false)
+		{
+		}
 		public ChatJoinResponseServerPacket(bool status) : base(PacketType.ChatJoinResult, status)
 		{
 		}

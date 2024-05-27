@@ -156,7 +156,7 @@ namespace Client.Net
 
                         case PacketType.ChatJoinResult:
                             ChatJoinResponseServerPacket chatJoinResultPacket = JsonConvert.DeserializeObject<ChatJoinResponseServerPacket>(jsonPacket);
-                            ChatJoinResult?.Invoke(this, new ChatJoinResultEventArgs() { Status = chatJoinResultPacket.Status, Message = chatJoinResultPacket.Message, ChatId = chatJoinResultPacket.Chat.Id, ChatModel = chatJoinResultPacket.Chat });
+                            ChatJoinResult?.Invoke(this, new ChatJoinResultEventArgs() { Status = chatJoinResultPacket.Status, Message = chatJoinResultPacket.Message, ChatModel = chatJoinResultPacket.Chat });
                             break;
 
                         case PacketType.UserChatsResult:
@@ -181,7 +181,7 @@ namespace Client.Net
 
                         case PacketType.ChatLeaveResult:
                             ChatLeaveResponseServerPacket chatLeaveResult = JsonConvert.DeserializeObject<ChatLeaveResponseServerPacket>(jsonPacket);
-                            ChatLeaveResult?.Invoke(this, new ChatJoinResultEventArgs() { ChatId = chatLeaveResult.ChatId, Status = chatLeaveResult.Status, Message = chatLeaveResult.Message });
+                            ChatLeaveResult?.Invoke(this, new ChatJoinResultEventArgs() { Status = chatLeaveResult.Status, Message = chatLeaveResult.Message });
                             break;
 
                         case PacketType.ChatRolesResponse:
@@ -272,7 +272,10 @@ namespace Client.Net
                             BaseResponseServerPacket chatMemberMuteResponsePacket = JsonConvert.DeserializeObject<BaseResponseServerPacket>(jsonPacket);
                             ChatMemberActionResponse?.Invoke(this, new ChatActionEventArgs(chatMemberMuteResponsePacket.Status, chatMemberMuteResponsePacket.Message));
                             break;
-
+                        case PacketType.ChatMembersUpdate:
+                            ChatMembersUpdateServerPacket updatePacket = JsonConvert.DeserializeObject<ChatMembersUpdateServerPacket>(jsonPacket);
+                            ChatMembersUpdate?.Invoke(this, new ChatMembersUpdateEventArgs(updatePacket.Members, updatePacket.ChatId));
+                            break;
 						default:
                             break;
 
@@ -291,7 +294,6 @@ namespace Client.Net
 
     internal class ChatJoinResultEventArgs : EventArgs
     {
-        public int ChatId { get; set; }
         public bool Status { get; set; }
         public string Message { get; set; }
 

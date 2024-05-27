@@ -27,6 +27,7 @@ namespace Server.Handler.Auth
         {
             using (var scope = Program.ServiceProvider.CreateScope())
             {
+
                 userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
 				securityService = scope.ServiceProvider.GetRequiredService<SecurityService>();
 			}

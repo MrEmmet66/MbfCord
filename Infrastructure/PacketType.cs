@@ -64,5 +64,6 @@ namespace Infrastructure
 		RoleRemove,
 		ChatMemberUpdate,
 		UsernameEdit,
+		ChatMembersUpdate,
 	}
 }

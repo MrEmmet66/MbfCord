@@ -41,7 +41,7 @@ namespace Server.Handler.Chat
 			List<ChatMemberClientModel> chatMembers = new List<ChatMemberClientModel>();
 			foreach (var member in chat.Members)
 			{
-				Role role = GetRoleInChat(chat, member.Id);
+				Role role = await GetRoleInChatAsync(chat, member.Id);
 				chatMembers.Add(new ChatMemberClientModel(member.Id, member.Username, new ChatRoleClientModel
 				{
 					Id = role.Id,
@@ -58,9 +58,9 @@ namespace Server.Handler.Chat
 			sender.SendPacket(PacketType.ChatMembersResult, membersPacket.Serialize());
 		}
 
-		private Role GetRoleInChat(Channel chat, int userId)
+		private async Task<Role> GetRoleInChatAsync(Channel chat, int userId)
 		{
-			User user = userRepository.GetByIdWithIncludes(userId);
+			User user = await userRepository.GetByIdWithIncludesAsync(userId);
 			Role role = user.Roles.FirstOrDefault(r => r.Chat.Id == chat.Id);
 			return role;
 		}
